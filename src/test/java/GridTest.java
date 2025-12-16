@@ -11,24 +11,18 @@ public class GridTest {
 
     @ParameterizedTest
     @CsvSource({
-        "5,5",
-        "10,14",
-        "1,5"
+            "5, 5, true",
+            "10, 14, true",
+            "1, 5, true",
+            "7, 7, false",
+            "6, 3, false",
+            "1, 1, false"
     })
-    public void EmptyCross(int row, int column) {
-        assertEquals(true, grid.isEmpty(row, column));
-    }
+    void isEmpty(int row, int column, boolean expected) {
+        if (!expected)
+            grid.occupyCell(row, column);
 
-
-    @ParameterizedTest
-    @CsvSource({
-        "7,7",
-        "6,3",
-        "1,1"
-    })
-    public void notEmptyCross(int row, int column) {
-        grid.occupyCell(row,column);
-        assertEquals(false, grid.isEmpty(row, column));
+        assertEquals(expected, grid.isEmpty(row, column));
     }
 
 }
