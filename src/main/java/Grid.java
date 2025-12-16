@@ -17,10 +17,6 @@ public class Grid {
         }
     }
 
-    public static String returnCoordinatesOF(int x, int y) {
-        return "(" + x + ";" + y + ")";
-    }
-
     public boolean isEmpty(int row, int column) {
         if (grid[row][column]==Cross.EMPTY) return true;
         else return false;

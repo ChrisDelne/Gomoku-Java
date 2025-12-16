@@ -11,16 +11,6 @@ public class GridTest {
 
     @ParameterizedTest
     @CsvSource({
-        "3,3,(3;3)",
-        "13,1,(13;1)",
-        "11,15,(11;15)"
-    })
-    public void printCoordinates(int x, int y, String expected) {
-        assertEquals(expected, Grid.returnCoordinatesOF(x, y));
-    }
-
-    @ParameterizedTest
-    @CsvSource({
         "5,5",
         "10,14",
         "1,5"
