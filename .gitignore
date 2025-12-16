@@ -16,6 +16,16 @@ build/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+.idea/misc.xml
+.idea/workspace.xml
+.idea/copilot*
+
+
+
+# GitHub Copilot (JetBrains)
+.copilot/
+.github/copilot/
+
 
 ### Eclipse ###
 .apt_generated
