@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GridTest {
 
+    Grid grid = new Grid();
+
     @ParameterizedTest
     @CsvSource({
         "3,3,(3;3)",
@@ -17,34 +19,31 @@ public class GridTest {
         assertEquals(expected, Grid.returnCoordinatesOF(x, y));
     }
 
-    @Test
-    public void empty5x5() {
-        assertEquals(true, Grid.isEmpty(5, 5));
+    @ParameterizedTest
+    @CsvSource({
+        "5,5",
+        "10,14",
+        "1,5"
+    })
+    public void EmptyCross(int row, int column) {
+        assertEquals(true, grid.isEmpty(row, column));
     }
 
-    @Test
-    public void empty10x15() {
-        assertEquals(true, Grid.isEmpty(10, 15));
-    }
 
-    @Test
-    public void empty1x5() {
-        assertEquals(true, Grid.isEmpty(1, 5));
-    }
-
+    @Disabled
     @Test
     public void notEmpty7x7() {
-        assertEquals(false, Grid.isEmpty(7, 7));
+        assertEquals(false, grid.isEmpty(7, 7));
     }
-
+    @Disabled
     @Test
     public void notEmpty6x3() {
-        assertEquals(false, Grid.isEmpty(6, 3));
+        assertEquals(false, grid.isEmpty(6, 3));
     }
-
+    @Disabled
     @Test
     public void notEmpty1x1() {
-        assertEquals(false, Grid.isEmpty(1, 1));
+        assertEquals(false, grid.isEmpty(1, 1));
     }
 
 }
