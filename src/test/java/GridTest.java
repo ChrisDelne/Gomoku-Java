@@ -20,20 +20,15 @@ public class GridTest {
     }
 
 
-    @Disabled
-    @Test
-    public void notEmpty7x7() {
-        assertEquals(false, grid.isEmpty(7, 7));
-    }
-    @Disabled
-    @Test
-    public void notEmpty6x3() {
-        assertEquals(false, grid.isEmpty(6, 3));
-    }
-    @Disabled
-    @Test
-    public void notEmpty1x1() {
-        assertEquals(false, grid.isEmpty(1, 1));
+    @ParameterizedTest
+    @CsvSource({
+        "7,7",
+        "6,3",
+        "1,1"
+    })
+    public void notEmptyCross(int row, int column) {
+        grid.occupyCell(row,column);
+        assertEquals(false, grid.isEmpty(row, column));
     }
 
 }
