@@ -18,8 +18,7 @@ public class Grid {
     }
 
     public boolean isEmpty(int row, int column) {
-        if (grid[row][column]==Cross.EMPTY) return true;
-        else return false;
+        return grid[row][column] == Cross.EMPTY;
     }
 
     public void occupyCell(int row, int column) {

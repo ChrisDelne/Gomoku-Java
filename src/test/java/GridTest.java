@@ -18,11 +18,11 @@ public class GridTest {
             "6, 3, false",
             "1, 1, false"
     })
-    void isEmpty(int row, int column, boolean expected) {
-        if (!expected)
+    void isEmpty(int row, int column, boolean busy) {
+        if (!busy)
             grid.occupyCell(row, column);
 
-        assertEquals(expected, grid.isEmpty(row, column));
+        assertEquals(busy, grid.isEmpty(row, column));
     }
 
 }
