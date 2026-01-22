@@ -18,11 +18,28 @@ public class GridTest {
             "6, 3, false",
             "1, 1, false"
     })
-    void isEmpty(int row, int column, boolean busy) {
-        if (!busy)
+    void isEmpty(int row, int column, boolean empty) {
+        if (!empty)
             grid.occupyCell(row, column);
 
-        assertEquals(busy, grid.isEmpty(row, column));
+        assertEquals(empty, grid.isEmpty(row, column));
     }
 
+
+
+    @ParameterizedTest
+   @CsvSource({
+           "5, 5, true",
+           "10, 14, true",
+           "1, 5, true",
+           "7, 7, false",
+           "6, 3, false",
+           "1, 1, false"
+   })
+    void isTaken( int row, int column, boolean taken) {
+        if (taken)
+            grid.occupyCell(row, column);
+
+        assertEquals(taken, grid.isTaken(row, column));
+    }
 }

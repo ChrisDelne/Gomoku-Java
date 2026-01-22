@@ -20,6 +20,9 @@ public class Grid {
     public boolean isEmpty(int row, int column) {
         return grid[row][column] == Cross.EMPTY;
     }
+    public boolean isTaken(int row, int column) {
+        return grid[row][column] != Cross.EMPTY;
+    }
 
     public void occupyCell(int row, int column) {
         grid[row][column] = Cross.TAKEN;
