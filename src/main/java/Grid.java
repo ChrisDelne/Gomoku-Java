@@ -1,7 +1,9 @@
 public class Grid {
     public enum Cross {
         EMPTY,
-        TAKEN
+        TAKEN,
+        BLACK,
+        WHITE
     }
 
     private final int ROWS = 15;
@@ -24,8 +26,16 @@ public class Grid {
         return grid[row][column] != Cross.EMPTY;
     }
 
-    public void occupyCell(int row, int column) {
+    public void occupyCross(int row, int column) {
         grid[row][column] = Cross.TAKEN;
+    }
+
+    public void occupyCrossWithBlack(int row, int column) {
+        grid[row][column] = Cross.BLACK;
+    }
+
+    public void occupyCrossWithWhite(int row, int column) {
+        grid[row][column] = Cross.WHITE;
     }
 
 }

@@ -9,6 +9,21 @@ public class GridTest {
 
     Grid grid = new Grid();
 
+
+    @ParameterizedTest
+    @CsvSource({
+            "3, 3",
+            "0, 0",
+            "14, 14",
+            "7, 8",
+            "10, 5"
+    })
+    void occupyCross(int row, int column) {
+        grid.occupyCross(row, column);
+        assertEquals(Grid.Cross.TAKEN, grid.isTaken(row, column) ? Grid.Cross.TAKEN : Grid.Cross.EMPTY);
+    }
+
+
     @ParameterizedTest
     @CsvSource({
             "5, 5, true",
@@ -19,8 +34,7 @@ public class GridTest {
             "1, 1, false"
     })
     void isEmpty(int row, int column, boolean empty) {
-        if (!empty)
-            grid.occupyCell(row, column);
+        if (!empty) grid.occupyCross(row, column);
 
         assertEquals(empty, grid.isEmpty(row, column));
     }
@@ -37,9 +51,12 @@ public class GridTest {
            "1, 1, false"
    })
     void isTaken( int row, int column, boolean taken) {
-        if (taken)
-            grid.occupyCell(row, column);
-
+        if (taken) grid.occupyCross(row, column);
         assertEquals(taken, grid.isTaken(row, column));
     }
+
+
+
 }
+
+
