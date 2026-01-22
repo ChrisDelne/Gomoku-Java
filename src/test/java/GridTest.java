@@ -12,50 +12,44 @@ public class GridTest {
 
     @ParameterizedTest
     @CsvSource({
-            "3, 3",
-            "0, 0",
-            "14, 14",
-            "7, 8",
-            "10, 5"
+            "5, 5, true, false",
+            "10, 14, true, false",
+            "1, 5, true, false",
+            "7, 7, false, false",
+            "6, 3, false, false",
+            "1, 1, false, true"
     })
-    void occupyCross(int row, int column) {
-        grid.occupyCross(row, column);
-        assertEquals(Grid.Cross.TAKEN, grid.isTaken(row, column) ? Grid.Cross.TAKEN : Grid.Cross.EMPTY);
-    }
-
-
-    @ParameterizedTest
-    @CsvSource({
-            "5, 5, true",
-            "10, 14, true",
-            "1, 5, true",
-            "7, 7, false",
-            "6, 3, false",
-            "1, 1, false"
-    })
-    void isEmpty(int row, int column, boolean empty) {
-        if (!empty) grid.occupyCross(row, column);
-
+    void isEmpty(int row, int column, boolean empty, boolean occupyWithBlack) {
+        if (!empty && occupyWithBlack) grid.occupyCrossWithBlack(row, column);
+        else
+        if (!empty) grid.occupyCrossWithWhite(row, column);
         assertEquals(empty, grid.isEmpty(row, column));
     }
 
 
-
-    @ParameterizedTest
-   @CsvSource({
-           "5, 5, true",
-           "10, 14, true",
-           "1, 5, true",
-           "7, 7, false",
-           "6, 3, false",
-           "1, 1, false"
-   })
-    void isTaken( int row, int column, boolean taken) {
-        if (taken) grid.occupyCross(row, column);
-        assertEquals(taken, grid.isTaken(row, column));
+    @Test
+    void occupyCrossWithBlack() {
+        grid.occupyCrossWithBlack(4, 4);
+        assertEquals(Grid.Cross.BLACK, grid.isOccupiedByBlack(4, 4) ? Grid.Cross.BLACK : Grid.Cross.EMPTY);
     }
 
+    @Test
+    void occupyCrossWithWhite() {
+        grid.occupyCrossWithWhite(2, 2);
+        assertEquals(Grid.Cross.WHITE, grid.isOccupiedByWhite(2, 2) ? Grid.Cross.WHITE : Grid.Cross.EMPTY);
+    }
 
+    @Test
+    void isOccupiedByBlack() {
+        grid.occupyCrossWithBlack(6, 6);
+        assertEquals(true, grid.isOccupiedByBlack(6, 6));
+    }
+
+    @Test
+    void isOccupiedByWhite() {
+        grid.occupyCrossWithWhite(8, 8);
+        assertEquals(true, grid.isOccupiedByWhite(8, 8));
+    }
 
 }
 

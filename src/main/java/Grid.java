@@ -22,12 +22,13 @@ public class Grid {
     public boolean isEmpty(int row, int column) {
         return grid[row][column] == Cross.EMPTY;
     }
-    public boolean isTaken(int row, int column) {
-        return grid[row][column] != Cross.EMPTY;
+
+    public boolean isOccupiedByBlack(int row, int column) {
+        return grid[row][column] == Cross.BLACK;
     }
 
-    public void occupyCross(int row, int column) {
-        grid[row][column] = Cross.TAKEN;
+    public boolean isOccupiedByWhite(int row, int column) {
+        return grid[row][column] == Cross.WHITE;
     }
 
     public void occupyCrossWithBlack(int row, int column) {
