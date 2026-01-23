@@ -7,11 +7,11 @@ public class WinChecker {
     }
 
 
-    private int consecutiveCount(int row, int column, int deltaRow, int deltaColumn, Grid.Cross player) {
+    private int consecutiveCount(int row, int column, int deltaRow, int deltaColumn) {
         int count = 0;
-        while (row >= 0 && row < grid.getROWS()  && column >= 0 && column < grid.getCOLUMNS()) {
-            if ((player == Grid.Cross.BLACK && grid.isOccupiedByBlack(row, column)) ||
-                (player == Grid.Cross.WHITE && grid.isOccupiedByWhite(row, column))) {
+        Grid.Cross startCrossColor = grid.getCrossAt(row, column);
+        while (row >= 0 && row < grid.getROWS()  && column >= 0 && column < grid.getCOLUMNS() && startCrossColor != Grid.Cross.EMPTY) {
+            if (grid.getCrossAt(row, column) == startCrossColor) {
                 count++;
                 row += deltaRow;
                 column += deltaColumn;
@@ -22,7 +22,7 @@ public class WinChecker {
         return count;
     }
 
-    public boolean isWinningMove(int row, int column, Grid.Cross player) {
+    public boolean isWinningMove(int row, int column) {
         int[][] directions = {
                 {0, 1},   // Horizontal
                 {1, 0},   // Vertical
@@ -37,9 +37,9 @@ public class WinChecker {
             int count = -1;  // Start with -1 to avoid double counting the starting position
 
             // Count in the positive direction
-            count += consecutiveCount(row, column, deltaRow, deltaColumn, player);
+            count += consecutiveCount(row, column, deltaRow, deltaColumn);
             // Count in the negative direction
-            count += consecutiveCount(row, column, -deltaRow, -deltaColumn, player);
+            count += consecutiveCount(row, column, -deltaRow, -deltaColumn);
             if (count >= 5) {
                 return true;
             }
