@@ -26,6 +26,21 @@ public class Grid {
         return COLUMNS;
     }
 
+    //forse da sostituire a getROWS e getCOLUMNS
+    /*
+    public int getMaxRowIndex() {
+        return ROWS - 1;
+    }
+
+    public int getMaxColumnIndex() {
+        return COLUMNS - 1;
+    }
+
+    */
+
+    public Cross getCrossAt(int row, int column) {
+        return grid[row][column];
+    }
 
     public boolean isEmpty(int row, int column) {
         return grid[row][column] == Cross.EMPTY;
@@ -39,9 +54,7 @@ public class Grid {
         return grid[row][column] == Cross.WHITE;
     }
 
-    public Cross getCrossAt(int row, int column) {
-        return grid[row][column];
-    }
+
 
     public void occupyCrossWithBlack(int row, int column) {
         grid[row][column] = Cross.BLACK;
