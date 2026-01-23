@@ -1,7 +1,6 @@
 public class Grid {
     public enum Cross {
         EMPTY,
-        TAKEN,
         BLACK,
         WHITE
     }
@@ -19,6 +18,15 @@ public class Grid {
         }
     }
 
+    public int getROWS() {
+        return ROWS;
+    }
+
+    public int getCOLUMNS() {
+        return COLUMNS;
+    }
+
+
     public boolean isEmpty(int row, int column) {
         return grid[row][column] == Cross.EMPTY;
     }
@@ -29,6 +37,10 @@ public class Grid {
 
     public boolean isOccupiedByWhite(int row, int column) {
         return grid[row][column] == Cross.WHITE;
+    }
+
+    public Cross getCrossAt(int row, int column) {
+        return grid[row][column];
     }
 
     public void occupyCrossWithBlack(int row, int column) {

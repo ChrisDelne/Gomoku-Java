@@ -10,6 +10,17 @@ public class GridTest {
     Grid grid = new Grid();
 
 
+    @Test
+    void getROWS() {
+        assertEquals(15, grid.getROWS());
+    }
+
+    @Test
+    void getCOLUMNS() {
+        assertEquals(15, grid.getCOLUMNS());
+    }
+
+
     @ParameterizedTest
     @CsvSource({
             "5, 5, true, false",
@@ -51,6 +62,22 @@ public class GridTest {
         assertEquals(true, grid.isOccupiedByWhite(8, 8));
     }
 
+    @Test
+    void getCrossAt() {
+        grid.occupyCrossWithBlack(3, 3);
+        assertEquals(Grid.Cross.BLACK, grid.getCrossAt(3, 3));
+    }
+
+    @Test
+    void getCrossAtEmpty() {
+        assertEquals(Grid.Cross.EMPTY, grid.getCrossAt(0, 0));
+    }
+
+    @Test
+    void getCrossAtWhite() {
+        grid.occupyCrossWithWhite(9, 9);
+        assertEquals(Grid.Cross.WHITE, grid.getCrossAt(9, 9));
+    }
 }
 
 
