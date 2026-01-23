@@ -1,4 +1,6 @@
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class WinCheckerTest {
@@ -86,6 +88,20 @@ class WinCheckerTest {
         grid.occupyCrossWithBlack(9, 7);
         grid.occupyCrossWithBlack(10, 7);
         assertEquals(false, winChecker.isWinningMove(7, 7));
+    }
+
+    @Test
+    void isWinningMove_WinMultipleDirections() {
+        for (int i = 0; i < 5; i++) {
+            grid.occupyCrossWithBlack(5, i); // Horizontal
+            grid.occupyCrossWithBlack(i, 5); // Vertical
+        }
+        assertEquals(true, winChecker.isWinningMove(5, 2));
+    }
+
+    @Test
+    void isWinningMove_PointIsNotOccupied() {
+        assertEquals(false, winChecker.isWinningMove(0, 0));
     }
 
 }

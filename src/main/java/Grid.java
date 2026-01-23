@@ -43,6 +43,10 @@ public class Grid {
     }
 
     // aggiungere funzione isInsideGrid isInsideBounds isInside (scegliere un nome)
+    public boolean contains(int row, int column) {
+        return row >= 0 && row < ROWS && column >= 0 && column < COLUMNS;
+    }
+
 
     public boolean isEmpty(int row, int column) {
         return grid[row][column] == Cross.EMPTY;
