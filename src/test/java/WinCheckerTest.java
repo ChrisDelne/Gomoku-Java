@@ -1,4 +1,3 @@
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -12,7 +11,7 @@ class WinCheckerTest {
         for (int r = 0; r < 5; r++) {
             grid.occupyCrossWithBlack(r, 10);
         }
-        assertEquals(true, winChecker.isWinningMove(3, 10, Grid.Cross.BLACK));
+        assertEquals(true, winChecker.isWinningMove(3, 10));
     }
 
     @Test
@@ -20,7 +19,7 @@ class WinCheckerTest {
         for (int i = 0; i < 5; i++) {
             grid.occupyCrossWithBlack(i, i);
         }
-        assertEquals(true, winChecker.isWinningMove(2, 2, Grid.Cross.BLACK));
+        assertEquals(true, winChecker.isWinningMove(2, 2));
     }
 
     @Test
@@ -28,7 +27,7 @@ class WinCheckerTest {
         for (int i = 0; i < 5; i++) {
             grid.occupyCrossWithBlack(i, grid.getCOLUMNS()-1 - i);
         }
-        assertEquals(true, winChecker.isWinningMove(2, 12, Grid.Cross.BLACK));
+        assertEquals(true, winChecker.isWinningMove(2, 12));
     }
 
 
@@ -38,7 +37,7 @@ class WinCheckerTest {
         for (int c = 0; c < 5; c++) {
             grid.occupyCrossWithBlack(7, c);
         }
-        assertEquals(true, winChecker.isWinningMove(7, 3, Grid.Cross.BLACK));
+        assertEquals(true, winChecker.isWinningMove(7, 3));
     }
 
    @Test
@@ -47,7 +46,7 @@ class WinCheckerTest {
        grid.occupyCrossWithBlack(0, 1);
        grid.occupyCrossWithBlack(0, 2);
        grid.occupyCrossWithBlack(0, 3);
-       assertEquals(false, winChecker.isWinningMove(0, 3, Grid.Cross.BLACK));
+       assertEquals(false, winChecker.isWinningMove(0, 3));
    }
 
    @Test
@@ -57,7 +56,7 @@ class WinCheckerTest {
         grid.occupyCrossWithBlack(7, 7);
         grid.occupyCrossWithBlack(8, 8);
         grid.occupyCrossWithBlack(9, 9);
-        assertEquals(false, winChecker.isWinningMove(9, 9, Grid.Cross.BLACK));
+        assertEquals(false, winChecker.isWinningMove(9, 9));
     }
 
     @Test
@@ -67,7 +66,7 @@ class WinCheckerTest {
         grid.occupyCrossWithWhite(12, 12);
         grid.occupyCrossWithBlack(13, 13);
         grid.occupyCrossWithBlack(14, 14);
-        assertEquals(false, winChecker.isWinningMove(12, 12, Grid.Cross.WHITE));
+        assertEquals(false, winChecker.isWinningMove(12, 12));
     }
 
     @Test
@@ -75,7 +74,7 @@ class WinCheckerTest {
         for (int c = 10; c < 15; c++) {
             grid.occupyCrossWithBlack(14, c);
         }
-        assertEquals(true, winChecker.isWinningMove(14, 12, Grid.Cross.BLACK));
+        assertEquals(true, winChecker.isWinningMove(14, 12));
     }
 
     @Test
@@ -86,7 +85,7 @@ class WinCheckerTest {
         grid.occupyCrossWithBlack(8, 7);
         grid.occupyCrossWithBlack(9, 7);
         grid.occupyCrossWithBlack(10, 7);
-        assertEquals(false, winChecker.isWinningMove(7, 7, Grid.Cross.BLACK));
+        assertEquals(false, winChecker.isWinningMove(7, 7));
     }
 
 }
