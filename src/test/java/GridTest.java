@@ -78,6 +78,48 @@ public class GridTest {
         grid.occupyCrossWithWhite(9, 9);
         assertEquals(Grid.Cross.WHITE, grid.getCrossAt(9, 9));
     }
+
+    //qua penso si potrebbero confrontare tutti i punti di una griglia facendo
+    //uno stream che crea la lista di tutti i punti della griglia
+    @Test
+    void containsPosition() {
+        Grid.Position position = new Grid.Position(5, 5);
+        assertEquals(true, grid.contains(position));
+    }
+
+    @Test
+    void notContainsPosition() {
+        Grid.Position position = new Grid.Position(15, 15);
+        assertEquals(false, grid.contains(position));
+    }
+
+    @Test
+    void getCrossAtPosition() {
+        Grid.Position position = new Grid.Position(4, 4);
+        grid.occupyCrossWithWhite(4, 4);
+        assertEquals(Grid.Cross.WHITE, grid.getCrossAt(position));
+    }
+    @Test
+    void getCrossWhiteAtPositionWithPosition() {
+        Grid.Position position = new Grid.Position(4, 4);
+        grid.occupyCrossWithWhite(position);
+        assertEquals(Grid.Cross.WHITE, grid.getCrossAt(position));
+    }
+
+    @Test
+    void getCrossBlackAtPositionWithPosition() {
+        Grid.Position position = new Grid.Position(7, 7);
+        grid.occupyCrossWithBlack(position);
+        assertEquals(Grid.Cross.BLACK, grid.getCrossAt(position));
+    }
+
+    @Test
+    void getCrossAtPositionEmpty() {
+        Grid.Position position = new Grid.Position(2, 2);
+        assertEquals(Grid.Cross.EMPTY, grid.getCrossAt(position));
+    }
+
+
 }
 
 

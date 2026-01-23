@@ -19,4 +19,5 @@ public enum Direction {
     public int deltaColumn() {
         return deltaColumn;
     }
+
 }
