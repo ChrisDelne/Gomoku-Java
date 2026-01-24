@@ -40,7 +40,9 @@ CLASSI
 * DrawChecker (gestisce il pareggio)
   * si puo creare una funzione tipo canWin(black) e si fa un && per controllare se nessunio dei due puo vincere
 * Player
-* Partita
+* Game
+  * gestisce lo  stato della partita(IN_PROGRESS, WIN_BLACK, WIN_WHITE, DRAW)(loop infinito finchè non c’è vittoria o pareggio)
+  * gestisce i turni(a chi tocca ed a quale turno siamo arrivati)
 
 
 TO DO LIST
