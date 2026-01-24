@@ -1,12 +1,12 @@
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class MoveServiceTest {
 
-    MoveService moveService = new MoveService(new Grid());
+    private MoveService moveService;
 
     @ParameterizedTest
     @CsvSource({
@@ -17,6 +17,7 @@ public class MoveServiceTest {
     })
     void makeMoveOutOfBound(int row, int col, MoveResult expectedResult) {
         Grid.Position position = new Grid.Position(row, col);
+        moveService = new MoveService(new Grid());
         MoveResult result = moveService.makeMove(Player.BLACK, position);
         assertEquals(expectedResult, result);
     }
@@ -30,6 +31,7 @@ public class MoveServiceTest {
     })
     void makeMoveValid(int row, int col, MoveResult expectedResult) {
         Grid.Position position = new Grid.Position(row, col);
+        moveService = new MoveService(new Grid());
         MoveResult result = moveService.makeMove(Player.WHITE, position);
         assertEquals(expectedResult, result);
     }
@@ -43,8 +45,25 @@ public class MoveServiceTest {
     })
     void makeMovePositionOccupied(int row, int col, MoveResult expectedResult) {
         Grid.Position position = new Grid.Position(row, col);
+        moveService = new MoveService(new Grid());
         moveService.makeMove(Player.BLACK, position); //Occupo la posizione
         MoveResult result = moveService.makeMove(Player.WHITE, position); //Dovrebbe essere occupata
         assertEquals(expectedResult, result);
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "2, 3",
+            "4, 5",
+            "6, 7",
+            "11, 8"
+    })
+    void validMoveOccupiesTheGrid(int row, int col) {
+        Grid grid = new Grid();
+        moveService = new MoveService(grid);
+        Grid.Position position = new Grid.Position(row, col);
+        MoveResult result = moveService.makeMove(Player.BLACK, position);
+        assertEquals(MoveResult.VALID_MOVE, result);
+        assertFalse(grid.isEmpty(position));
     }
 }

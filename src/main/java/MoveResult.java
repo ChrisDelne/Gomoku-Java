@@ -10,4 +10,13 @@ public enum MoveResult {
         this.valid = valid;
         this.reasonWhy = reasonWhy;
     }
+
+    public boolean isValid() {
+        return valid;
+    }
+
+    public String reason() {
+        return reasonWhy;
+    }
+
 }
