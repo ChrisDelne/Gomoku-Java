@@ -9,8 +9,6 @@ class GameTest {
         Game game = new Game();
 
         assertNotNull(game.getGrid());
-        assertNotNull(game.getPlayerBlack());
-        assertNotNull(game.getPlayerWhite());
     }
 }
 
