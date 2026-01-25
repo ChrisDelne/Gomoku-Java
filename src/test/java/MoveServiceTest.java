@@ -1,4 +1,3 @@
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -15,10 +14,10 @@ public class MoveServiceTest {
             "-1, 5, OUT_OF_BOUNDS",
             "5, -1, OUT_OF_BOUNDS"
     })
-    void makeMoveOutOfBound(int row, int col, MoveResult expectedResult) {
+    void registerMoveOutOfBound(int row, int col, MoveResult expectedResult) {
         Grid.Position position = new Grid.Position(row, col);
         moveService = new MoveService(new Grid());
-        MoveResult result = moveService.makeMove(Player.BLACK, position);
+        MoveResult result = moveService.registerMove(Player.BLACK, position);
         assertEquals(expectedResult, result);
     }
 
@@ -29,10 +28,10 @@ public class MoveServiceTest {
             "10, 10, VALID_MOVE",
             "0, 6, VALID_MOVE"
     })
-    void makeMoveValid(int row, int col, MoveResult expectedResult) {
+    void registerMoveValid(int row, int col, MoveResult expectedResult) {
         Grid.Position position = new Grid.Position(row, col);
         moveService = new MoveService(new Grid());
-        MoveResult result = moveService.makeMove(Player.WHITE, position);
+        MoveResult result = moveService.registerMove(Player.WHITE, position);
         assertEquals(expectedResult, result);
     }
 
@@ -43,11 +42,11 @@ public class MoveServiceTest {
             "8, 2, POSITION_OCCUPIED",
             "1, 9, POSITION_OCCUPIED"
     })
-    void makeMovePositionOccupied(int row, int col, MoveResult expectedResult) {
+    void registerMovePositionOccupied(int row, int col, MoveResult expectedResult) {
         Grid.Position position = new Grid.Position(row, col);
         moveService = new MoveService(new Grid());
-        moveService.makeMove(Player.BLACK, position); //Occupo la posizione
-        MoveResult result = moveService.makeMove(Player.WHITE, position); //Dovrebbe essere occupata
+        moveService.registerMove(Player.BLACK, position); //Occupo la posizione
+        MoveResult result = moveService.registerMove(Player.WHITE, position); //Dovrebbe essere occupata
         assertEquals(expectedResult, result);
     }
 
@@ -62,7 +61,7 @@ public class MoveServiceTest {
         Grid grid = new Grid();
         moveService = new MoveService(grid);
         Grid.Position position = new Grid.Position(row, col);
-        MoveResult result = moveService.makeMove(Player.BLACK, position);
+        MoveResult result = moveService.registerMove(Player.BLACK, position);
         assertEquals(MoveResult.VALID_MOVE, result);
         assertFalse(grid.isEmpty(position));
     }

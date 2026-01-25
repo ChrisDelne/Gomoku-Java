@@ -1,4 +1,3 @@
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -28,7 +27,7 @@ class GameTest {
     void turnSwitchesAfterValidMove(int row, int col) {
         Game game = new Game();
         Grid.Position position = new Grid.Position(row, col);
-        game.registerMove(position);
+        game.makeMove(position);
         assertEquals(Player.WHITE, game.getCurrentPlayer());
     }
 
@@ -45,13 +44,13 @@ class GameTest {
         switch (scenario) {
             case "OUT_OF_BOUNDS" -> {
                 startingPlayer = game.getCurrentPlayer();
-                result = game.registerMove(new Grid.Position(-1, 1));
+                result = game.makeMove(new Grid.Position(-1, 1));
             }
             case "POSITION_OCCUPIED" -> {
                 Grid.Position pos = new Grid.Position(5, 5);
-                game.registerMove(pos);              //Valida
+                game.makeMove(pos);              //Valida
                 startingPlayer = game.getCurrentPlayer();
-                result = game.registerMove(pos);     //Invalida
+                result = game.makeMove(pos);     //Invalida
             }
             default -> throw new IllegalStateException();
         }
@@ -61,44 +60,62 @@ class GameTest {
     }
 
     //stati finali
-    @Disabled
     @Test
     void afterWinningMove_stateIsBlackWon() {
-        //to be implemented
-    }
-
-    @Disabled
-    @Test
-    void afterWinningMove_stateIswhiteWon() {
-        //to be implemented
-    }
-
-    @Disabled
-    @Test
-    void after_grid_is_full_stateIswhitedraw() {
-        //to be implemented
-    }
-
-
-
-
-
-    //altro
-
-    //Non so se ha senso, da valutare
-    @ParameterizedTest
-    @CsvSource({
-            "0, 3",
-            "2, 9",
-            "14, 3",
-            "10, 7"
-    })
-    void cannotMakeMoveIfGameIsFinished(int row, int col) {
         Game game = new Game();
-        game.endGameDraw();
-        Grid.Position position = new Grid.Position(row, col);
-        assertThrows(IllegalStateException.class, () -> game.registerMove(position));
+
+        game.makeMove(new Grid.Position(7,7)); // B
+        game.makeMove(new Grid.Position(0,0)); // W
+        game.makeMove(new Grid.Position(7,8)); // B
+        game.makeMove(new Grid.Position(1,0)); // W
+        game.makeMove(new Grid.Position(7,9)); // B
+        game.makeMove(new Grid.Position(2,0)); // W
+        game.makeMove(new Grid.Position(7,10)); // B
+        game.makeMove(new Grid.Position(3,0)); // W
+        game.makeMove(new Grid.Position(7,11)); // B -> win
+
+        assertEquals(Game.GameState.BLACK_WON, game.getState());
     }
+
+    @Test
+    void afterWinningMove_stateIsWhiteWon() {
+        Game game = new Game();
+
+        game.makeMove(new Grid.Position(7,7)); // B
+        game.makeMove(new Grid.Position(0,0)); // W
+        game.makeMove(new Grid.Position(7,8)); // B
+        game.makeMove(new Grid.Position(1,0)); // W
+        game.makeMove(new Grid.Position(7,9)); // B
+        game.makeMove(new Grid.Position(2,0)); // W
+        game.makeMove(new Grid.Position(7,10)); // B
+        game.makeMove(new Grid.Position(3,0)); // W
+        game.makeMove(new Grid.Position(6,10)); // B
+        game.makeMove(new Grid.Position(4, 0)); // W -> win
+
+        assertEquals(Game.GameState.WHITE_WON, game.getState());
+    }
+
+    @Test
+    void cannotMakeMoveIfGameFinished() {
+        Game game = new Game();
+
+        // BLACK vince
+        game.makeMove(new Grid.Position(7,7)); // B
+        game.makeMove(new Grid.Position(0,0)); // W
+        game.makeMove(new Grid.Position(7,8)); // B
+        game.makeMove(new Grid.Position(1,0)); // W
+        game.makeMove(new Grid.Position(7,9)); // B
+        game.makeMove(new Grid.Position(2,0)); // W
+        game.makeMove(new Grid.Position(7,10)); // B
+        game.makeMove(new Grid.Position(3,0)); // W
+        game.makeMove(new Grid.Position(7,11)); // B -> vince
+
+        assertNotEquals(Game.GameState.IN_PROGRESS, game.getState());
+
+        assertThrows(IllegalStateException.class,
+                () -> game.makeMove(new Grid.Position(5,5)));
+    }
+
 
 
 }

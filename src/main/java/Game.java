@@ -1,5 +1,5 @@
 public class Game {
-    //seconeme me bisogna eliminare finished. ciri.
+
     public enum GameState {
         //FINISHED,
         IN_PROGRESS,
@@ -36,32 +36,40 @@ public class Game {
         return currentPlayer;
     }
 
-    //forse da levare perchè potrebbe infrangere il principio di encapsulation
     public Grid getGrid() {
         return grid;
     }
 
 
     //renderei lo scambio di turni una responsabilità del game e non di questo metodo
-    public MoveResult registerMove(Grid.Position position) {
+    public MoveResult makeMove(Grid.Position position) {
         if (state != GameState.IN_PROGRESS)
             throw new IllegalStateException("Game not in progress");
 
-        MoveResult result = moveService.makeMove(currentPlayer, position);
-
-        if (result == MoveResult.VALID_MOVE)
-            switchTurn();
+        MoveResult result = moveService.registerMove(currentPlayer, position);
+        if (result.isValid())
+            advanceGameAfterValidMove(position);
 
         return result;
     }
 
-    private void switchTurn() {
-        currentPlayer = currentPlayer.other();
+
+    private void advanceGameAfterValidMove(Grid.Position position) {
+        if (winChecker.isWinningMove(position)) { // vittoria
+            state = (currentPlayer == Player.BLACK) ? GameState.BLACK_WON : GameState.WHITE_WON;
+            return;
+        }
+
+        if (drawChecker.isDraw()) // pareggio
+            state = GameState.DRAW;
+
+        if (state == GameState.IN_PROGRESS) // running
+            switchTurn();
     }
 
-    public void endGameDraw(){
-        //Succedono cose...
-        state = GameState.DRAW;
+
+    private void switchTurn() {
+        currentPlayer = currentPlayer.other();
     }
 
 }
