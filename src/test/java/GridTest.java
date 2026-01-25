@@ -90,13 +90,13 @@ public class GridTest {
     // -----------------------------
 
     @Test
-    void setBlackAt_int_writes_BLACK_readable_by_getCrossAt() {
+    void setBlackAt_with_int_readable_by_getCrossAt() {
         grid.setBlackAt(3, 3);
         assertEquals(Grid.CrossState.BLACK, grid.getCrossAt(3, 3));
     }
 
     @Test
-    void setWhiteAt_int_writes_WHITE_readable_by_getCrossAt() {
+    void setWhiteAt_with_int_readable_by_getCrossAt() {
         grid.setWhiteAt(9, 9);
         assertEquals(Grid.CrossState.WHITE, grid.getCrossAt(9, 9));
     }
@@ -215,126 +215,6 @@ public class GridTest {
         assertEquals(grid.isWhiteAt(14,14), grid.isWhiteAt(p));
     }
 }
-    /*
-
-
-    // -----------------------------
-    // getCrossAt(int, int)
-    // -----------------------------
-
-    //crossAt
-    @Test
-    void getCrossAt_return_empty_on_new_grid() {
-        assertEquals(Grid.CrossState.EMPTY, grid.getCrossAt(0, 0));
-    }
-    @Test
-    void getCrossAt_return_Black_after_setBlackAt() {
-        grid.setBlackAt(3, 3);
-        assertEquals(Grid.CrossState.BLACK, grid.getCrossAt(3, 3));
-    }
-    @Test
-    void getCrossAtWhite() {
-        grid.setWhiteAt(9, 9);
-        assertEquals(Grid.CrossState.WHITE, grid.getCrossAt(9, 9));
-    }
-
-    // getCrossAt(Position)
-    @Test
-    void getCrossAt_position_returns_value() {
-        Grid.Position p = new Grid.Position(4, 4);
-        grid.setWhiteAt(4, 4);
-        assertEquals(Grid.CrossState.WHITE, grid.getCrossAt(p));
-    }
-
-    //seters blackAt e whiteAt
-
-
-
-
-
-
-    @ParameterizedTest
-    @CsvSource({
-            "5, 5, true, false",
-            "10, 14, true, false",
-            "1, 5, true, false",
-            "7, 7, false, false",
-            "6, 3, false, false",
-            "1, 1, false, true"
-    })
-    void isEmpty(int row, int column, boolean empty, boolean occupyWithBlack) {
-        //se non è vuota ed nera la riempiamo col nero
-        if (!empty && occupyWithBlack) grid.setBlackAt(row, column);
-        else
-        //se non è vuota e non è nera la riempiamo col bianco
-        if (!empty) grid.setWhiteAt(row, column);
-        //oppure non la riempiamo completamente
-        assertEquals(empty, grid.isEmpty(row, column));
-    }
-
-
-    @Test
-    void occupyCrossWithBlack() {
-        grid.setBlackAt(4, 4);
-        assertEquals(Grid.CrossState.BLACK, grid.getCrossAt(4, 4));
-    }
-
-
-    @Test
-    void occupyCrossWithWhite() {
-        grid.setWhiteAt(4, 4);
-        assertEquals(Grid.CrossState.WHITE, grid.getCrossAt(4, 4));
-    }
-
-    @Test
-    void isBlackAt() {
-        grid.setBlackAt(6, 6);
-        assertEquals(true, grid.isBlackAt(6, 6));
-    }
-
-    @Test
-    void isWhiteAt() {
-        grid.setWhiteAt(8, 8);
-        assertEquals(true, grid.isWhiteAt(8, 8));
-    }
-
-
-    @Test
-    void notContainsPosition() {
-        Grid.Position position = new Grid.Position(15, 15);
-        assertEquals(false, grid.contains(position));
-    }
-
-    @Test
-    void getCrossAtPosition() {
-        Grid.Position position = new Grid.Position(4, 4);
-        grid.setWhiteAt(4, 4);
-        assertEquals(Grid.CrossState.WHITE, grid.getCrossAt(position));
-    }
-    @Test
-    void getCrossWhiteAtPositionWithPosition() {
-        Grid.Position position = new Grid.Position(4, 4);
-        grid.setWhiteAt(position);
-        assertEquals(Grid.CrossState.WHITE, grid.getCrossAt(position));
-    }
-
-    @Test
-    void getCrossBlackAtPositionWithPosition() {
-        Grid.Position position = new Grid.Position(7, 7);
-        grid.setBlackAt(position);
-        assertEquals(Grid.CrossState.BLACK, grid.getCrossAt(position));
-    }
-
-    @Test
-    void getCrossAtPositionEmpty() {
-        Grid.Position position = new Grid.Position(2, 2);
-        assertEquals(Grid.CrossState.EMPTY, grid.getCrossAt(position));
-    }
-
-
-    */
-
-
 
 
 

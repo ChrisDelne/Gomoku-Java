@@ -43,6 +43,11 @@ CLASSI
 * Game
   * gestisce lo  stato della partita(IN_PROGRESS, WIN_BLACK, WIN_WHITE, DRAW)(loop infinito finchè non c’è vittoria o pareggio)
   * gestisce i turni(a chi tocca ed a quale turno siamo arrivati)
+  * quando si fa una mossa cambia turno e giocatore
+  * ~~una mossa non valida non cambia ne player ne turno~~
+  * non si può giocare se lo stato non è IN_PROGRESS
+  * se c'è una mossa vincente lo stato cambia a WIN_BLACK o WIN_WHITE
+  * se c'è un pareggio lo stato cambia a DRAW
 
 
 TO DO LIST

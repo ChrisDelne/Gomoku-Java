@@ -90,7 +90,7 @@ class WinCheckerTest {
     }
 
     @Test
-    void isWinningMove_WinMultipleDirections() {
+    void isWinningMove_no_Win_Multiple_Directions() {
         for (int i = 0; i < 5; i++) {
             grid.setBlackAt(5, i); // Horizontal
             grid.setBlackAt(i, 5); // Vertical
