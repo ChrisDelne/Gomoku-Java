@@ -5,7 +5,7 @@ public class DrawChecker {
         this.grid = grid;
     }
 
-    private int countNoOpponentFromNextPosition(Grid.Position position, int deltaRow, int deltaColumn, Grid.Cross opponentColor) {
+    private int countNoOpponentFromNextPosition(Grid.Position position, int deltaRow, int deltaColumn, Grid.CrossState opponentColor) {
         int nextRow = position.row() + deltaRow;
         int nextColumn = position.col() + deltaColumn;
         int count = 0;
@@ -18,7 +18,7 @@ public class DrawChecker {
         return count;
     }
 
-    private int countNoOpponentBothDirections(Grid.Position position, Direction direction, Grid.Cross opponentColor) {
+    private int countNoOpponentBothDirections(Grid.Position position, Direction direction, Grid.CrossState opponentColor) {
         int deltaRow = direction.deltaRow();
         int deltaColumn = direction.deltaColumn();
 
@@ -26,8 +26,8 @@ public class DrawChecker {
                  + countNoOpponentFromNextPosition(position, -deltaRow, -deltaColumn, opponentColor);
     }
 
-    private boolean canStillWin(Grid.Cross player){
-        Grid.Cross opponent = (player == Grid.Cross.BLACK) ? Grid.Cross.WHITE : Grid.Cross.BLACK;
+    private boolean canStillWin(Grid.CrossState player){
+        Grid.CrossState opponent = (player == Grid.CrossState.BLACK) ? Grid.CrossState.WHITE : Grid.CrossState.BLACK;
 
         //scorriamo tutta la matrice
         for (int r = 0; r < grid.getROWS(); r++) {
@@ -48,7 +48,7 @@ public class DrawChecker {
     }
 
     public boolean isDraw(){
-        return !canStillWin(Grid.Cross.BLACK) && !canStillWin(Grid.Cross.WHITE);
+        return !(canStillWin(Grid.CrossState.BLACK) || canStillWin(Grid.CrossState.WHITE));
     }
 
 }

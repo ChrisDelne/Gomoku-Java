@@ -12,9 +12,9 @@ public class MoveService {
         if (!grid.isEmpty(position))
             return MoveResult.POSITION_OCCUPIED;
         if (player == Player.BLACK)
-            grid.occupyCrossWithBlack(position);
+            grid.setBlackAt(position);
         else
-            grid.occupyCrossWithWhite(position);
+            grid.setWhiteAt(position);
         return MoveResult.VALID_MOVE;
     }
 
