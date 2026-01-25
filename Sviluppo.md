@@ -48,13 +48,21 @@ CLASSI
   * non si può giocare se lo stato non è IN_PROGRESS
   * se c'è una mossa vincente lo stato cambia a WIN_BLACK o WIN_WHITE
   * se c'è un pareggio lo stato cambia a DRAW
-
+* UI (presentetion/controller layer)
+  * chiede input
+  * gestire errori di input (lettere invece di numeri, formati errati)
+  * ripetere la richiesta finché l’utente inserisce una mossa interpretabile
+  * mostrare la griglia, messaggi e stato partita
+  * il loop non è logica di gioco, è logica di interazione
+  * il dominio non dipende dalla presentazione; è la presentazione che invoca il dominio.
+  * gestisce rendering e coordinamento dell'interazione
+  * flusso I/O sincrono: input → invocazione del dominio → rendering
+  * Game è riusabile e testabile indipendentemente dalla console e da qualsiasi UI futura
+  
 
 TO DO LIST
-* refactoring test GridTest(più compatti)
+* ~~refactoring test GridTest(più compatti)~~
 * refactoring test WinCheckerTest(più compatti ed rifare le firme per elimanare il metodo duplicato isWinningMove)
-* rinominare Cross in CrossState? o qualcosa del genere tipo
-* eliminare da Grid le funzioni ripetute mantenendo solo quelle con point nella firma
+* ~~rinominare Cross in CrossState? o qualcosa del genere tipo~~
 
 TO DO?\ DA VALUTARE
-* un lineScanner da usare nei checker per scanzionare le varie direzioni ed eliminare ripetizioni
