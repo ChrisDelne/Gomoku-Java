@@ -10,7 +10,7 @@ class GameTest {
     @Test
     void gameStartsInProgressWithBlackTurn() {
         Game game = new Game();
-        assertEquals(Game.GameState.IN_PROGRESS, game.getState());
+        assertEquals(GameState.IN_PROGRESS, game.getState());
         assertEquals(Player.BLACK, game.getCurrentPlayer());
     }
 
@@ -74,7 +74,7 @@ class GameTest {
         game.makeMove(new Grid.Position(3,0)); // W
         game.makeMove(new Grid.Position(7,11)); // B -> win
 
-        assertEquals(Game.GameState.BLACK_WON, game.getState());
+        assertEquals(GameState.BLACK_WON, game.getState());
     }
 
     @Test
@@ -92,7 +92,7 @@ class GameTest {
         game.makeMove(new Grid.Position(6,10)); // B
         game.makeMove(new Grid.Position(4, 0)); // W -> win
 
-        assertEquals(Game.GameState.WHITE_WON, game.getState());
+        assertEquals(GameState.WHITE_WON, game.getState());
     }
 
     @Test
@@ -110,7 +110,7 @@ class GameTest {
         game.makeMove(new Grid.Position(3,0)); // W
         game.makeMove(new Grid.Position(7,11)); // B -> vince
 
-        assertNotEquals(Game.GameState.IN_PROGRESS, game.getState());
+        assertNotEquals(GameState.IN_PROGRESS, game.getState());
 
         assertThrows(IllegalStateException.class,
                 () -> game.makeMove(new Grid.Position(5,5)));

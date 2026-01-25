@@ -1,12 +1,4 @@
-public class Game {
-
-    public enum GameState {
-        //FINISHED,
-        IN_PROGRESS,
-        BLACK_WON,
-        WHITE_WON,
-        DRAW
-    }
+public class Game implements GameAPI{
 
     private final Grid grid;
     private GameState state;

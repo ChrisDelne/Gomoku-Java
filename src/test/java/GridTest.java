@@ -47,7 +47,7 @@ public class GridTest {
         boolean allEmpty =
                 IntStream.range(0, grid.getROWS()).allMatch(r ->
                         IntStream.range(0, grid.getCOLUMNS()).allMatch(c ->
-                                grid.getCrossAt(r, c) == Grid.CrossState.EMPTY));
+                                grid.getCrossAt(r, c) == CrossState.EMPTY));
 
         assertTrue(allEmpty);
     }
@@ -92,13 +92,13 @@ public class GridTest {
     @Test
     void setBlackAt_with_int_readable_by_getCrossAt() {
         grid.setBlackAt(3, 3);
-        assertEquals(Grid.CrossState.BLACK, grid.getCrossAt(3, 3));
+        assertEquals(CrossState.BLACK, grid.getCrossAt(3, 3));
     }
 
     @Test
     void setWhiteAt_with_int_readable_by_getCrossAt() {
         grid.setWhiteAt(9, 9);
-        assertEquals(Grid.CrossState.WHITE, grid.getCrossAt(9, 9));
+        assertEquals(CrossState.WHITE, grid.getCrossAt(9, 9));
     }
 
     // --- isAt / isEmpty / isBlackAt / isWhiteAt (int,int) ---
@@ -120,12 +120,12 @@ public class GridTest {
     void isAt_all_combinations(String actual, String requested, boolean expected) {
         int r = 2, c = 5; // non simmetrico, va bene
 
-        Grid.CrossState actualState = Grid.CrossState.valueOf(actual);
-        Grid.CrossState requestedState = Grid.CrossState.valueOf(requested);
+        CrossState actualState = CrossState.valueOf(actual);
+        CrossState requestedState = CrossState.valueOf(requested);
 
         // arrange: imposta lo stato reale della cella
-        if (actualState == Grid.CrossState.BLACK) grid.setBlackAt(r, c);
-        if (actualState == Grid.CrossState.WHITE) grid.setWhiteAt(r, c);
+        if (actualState == CrossState.BLACK) grid.setBlackAt(r, c);
+        if (actualState == CrossState.WHITE) grid.setWhiteAt(r, c);
         // se EMPTY non fare nulla
 
         assertEquals(expected, grid.isAt(requestedState, r, c));
@@ -176,14 +176,14 @@ public class GridTest {
     void setBlackAt_position_writes_BLACK() {
         Grid.Position p = new Grid.Position(10, 10);
         grid.setBlackAt(p);
-        assertEquals(Grid.CrossState.BLACK, grid.getCrossAt(10, 10));
+        assertEquals(CrossState.BLACK, grid.getCrossAt(10, 10));
     }
 
     @Test
     void setWhiteAt_position_writes_WHITE() {
         Grid.Position p = new Grid.Position(11, 11);
         grid.setWhiteAt(p);
-        assertEquals(Grid.CrossState.WHITE, grid.getCrossAt(11, 11));
+        assertEquals(CrossState.WHITE, grid.getCrossAt(11, 11));
     }
 
     // --- Overload Position: isAt / isEmpty / isBlackAt / isWhiteAt ---
@@ -192,7 +192,7 @@ public class GridTest {
     void isAt_position_true_when_state_matches() {
         Grid.Position p = new Grid.Position(12, 12);
         grid.setWhiteAt(p);
-        assertEquals(true, grid.isAt(Grid.CrossState.WHITE, p));
+        assertEquals(true, grid.isAt(CrossState.WHITE, p));
     }
 
     @Test

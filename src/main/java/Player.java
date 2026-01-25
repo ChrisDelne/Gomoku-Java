@@ -1,15 +1,15 @@
 public enum Player {
     BLACK, WHITE;
 
-    public Grid.CrossState toCross() {
+    public CrossState toCross() {
         return switch (this) {
-            case BLACK -> Grid.CrossState.BLACK;
-            case WHITE -> Grid.CrossState.WHITE;
+            case BLACK -> CrossState.BLACK;
+            case WHITE -> CrossState.WHITE;
         };
     }
 
     //penso sia una funzione da eliminare perchè non utile
-    public static Player fromCross(Grid.CrossState cross) {
+    public static Player fromCross(CrossState cross) {
         return switch (cross) {
             case BLACK -> BLACK;
             case WHITE -> WHITE;
