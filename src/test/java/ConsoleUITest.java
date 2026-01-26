@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 public class ConsoleUITest {
@@ -30,8 +31,32 @@ public class ConsoleUITest {
     }
 
     //scarta gli imput non validi
+    @ParameterizedTest
+    @CsvSource({
+            "'abc\n10 20',          10,20",
+            "'abc\n10,a\n10 20',    10,20",
+            "'adf\nsdg\nfgj\n3 4',  3,4",
+            "';\n,\nciao\n7 8',     7,8"
+    })
+    void readPosition_skips_any_number_of_invalid_inputs(String inputLines, int expectedRow, int expectedCol) {
+        Scanner in = new Scanner(new ByteArrayInputStream((inputLines + "\n").getBytes(StandardCharsets.UTF_8)));
+        PrintStream out = new PrintStream(new ByteArrayOutputStream(), true, StandardCharsets.UTF_8);
+        ConsoleUI ui = new ConsoleUI(in, out);
+
+        Position pos = ui.readPosition("");
+        assertEquals(new Position(expectedRow, expectedCol), pos);
+    }
+
 
     //lancia eccezione EOF
+    @Test
+    void readPosition_throws_if_input_ends() {
+        Scanner in = new Scanner(new ByteArrayInputStream("".getBytes(StandardCharsets.UTF_8)));
+        PrintStream out = new PrintStream(new ByteArrayOutputStream());
+        ConsoleUI ui = new ConsoleUI(in, out);
+
+        assertThrows(IllegalStateException.class, () -> ui.readPosition(""));
+    }
 
 
 
