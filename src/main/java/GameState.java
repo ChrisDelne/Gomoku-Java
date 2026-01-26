@@ -3,5 +3,4 @@ public enum GameState {
     BLACK_WON,
     WHITE_WON,
     DRAW
-
 }

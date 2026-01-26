@@ -32,10 +32,7 @@ public class Game implements TurnBasedGame {
         return grid;
     }
 
-    //FORSE seperarerei makeMove, advanceGameAfterValidMove e switchTurn che attualmente sono metodi annidati
-    //il primo fa pure gli altri tre, non è chiaro dal nome
-    //e dividerli aumenta l'indipendenza tra le responsabilità
-    //renderei lo scambio di turni una responsabilità della ConsoleUI e non di questo metodo
+    @Override
     public MoveResult makeMove(Position position) {
         if (state != GameState.IN_PROGRESS)
             throw new IllegalStateException("Game not in progress");
@@ -54,8 +51,7 @@ public class Game implements TurnBasedGame {
             return;
         }
 
-        if (drawChecker.isDraw()){
-            // pareggio
+        if (drawChecker.isDraw()) { // pareggio
             state = GameState.DRAW;
             return;
         }

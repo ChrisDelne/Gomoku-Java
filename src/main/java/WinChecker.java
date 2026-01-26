@@ -1,7 +1,7 @@
 public class WinChecker {
 
     private final Grid grid;
-    private static final int WIN_LENGHT = 5;
+    private static final int WIN_LENGTH = 5;
 
     public WinChecker(Grid grid) {
         this.grid = grid;
@@ -13,7 +13,7 @@ public class WinChecker {
         int nextColumn = position.col() + deltaColumn;
         int count = 0;
 
-        while ( grid.contains(nextRow, nextColumn) && grid.getCrossAt(nextRow, nextColumn) == startCrossColor) {
+        while (grid.contains(nextRow, nextColumn) && grid.getStateAt(nextRow, nextColumn) == startCrossColor) {
             count++;
             nextRow += deltaRow;
             nextColumn += deltaColumn;
@@ -30,16 +30,15 @@ public class WinChecker {
     }
 
     public boolean isWinningMove(Position position) {
-        CrossState startCrossColor = grid.getCrossAt(position);
-        if (startCrossColor == CrossState.EMPTY) {
+        CrossState startCrossColor = grid.getStateAt(position);
+        //Se l'incrocio di partenza è vuoto non può essere una mossa vincente
+        if (startCrossColor == CrossState.EMPTY)
             return false;
-        } //se la croce di partenza è vuota non può essere una mossa vincente
 
-        for (Direction direction : Direction.values()) {
-            if (consecutiveCountBothDirections(position, direction, startCrossColor) >= WIN_LENGHT) {//per richiedere 5 preciso disattivare il test Win_Multiple_Directions_more_of_five
+        for (Direction direction : Direction.values())
+            if (consecutiveCountBothDirections(position, direction, startCrossColor) >= WIN_LENGTH)
                 return true;
-            }
-        }
+
         return false;
     }
 

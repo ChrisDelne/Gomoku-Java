@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GameTest {
 
-    //test setup iniziale
     @Test
     void gameStartsInProgressWithBlackTurn() {
         Game game = new Game();
@@ -14,10 +13,8 @@ class GameTest {
         assertEquals(Player.BLACK, game.getCurrentPlayer());
     }
 
-
     //turn switching e not switching
 
-    //forse non serve un parametrized test
     @ParameterizedTest
     @CsvSource({
             "5, 5",
@@ -51,7 +48,7 @@ class GameTest {
                 Position pos = new Position(5, 5);
                 game.makeMove(pos);              //Valida
                 startingPlayer = game.getCurrentPlayer();
-                result = game.makeMove(pos);     //Invalida
+                result = game.makeMove(pos);     //Non valida
             }
             default -> throw new IllegalStateException();
         }
@@ -65,15 +62,15 @@ class GameTest {
     void afterWinningMove_stateIsBlackWon() {
         Game game = new Game();
 
-        game.makeMove(new Position(7,7)); // B
-        game.makeMove(new Position(0,0)); // W
-        game.makeMove(new Position(7,8)); // B
-        game.makeMove(new Position(1,0)); // W
-        game.makeMove(new Position(7,9)); // B
-        game.makeMove(new Position(2,0)); // W
-        game.makeMove(new Position(7,10)); // B
-        game.makeMove(new Position(3,0)); // W
-        game.makeMove(new Position(7,11)); // B -> win
+        game.makeMove(new Position(7, 7)); // B
+        game.makeMove(new Position(0, 0)); // W
+        game.makeMove(new Position(7, 8)); // B
+        game.makeMove(new Position(1, 0)); // W
+        game.makeMove(new Position(7, 9)); // B
+        game.makeMove(new Position(2, 0)); // W
+        game.makeMove(new Position(7, 10)); // B
+        game.makeMove(new Position(3, 0)); // W
+        game.makeMove(new Position(7, 11)); // B -> win
 
         assertEquals(GameState.BLACK_WON, game.getState());
     }
@@ -82,15 +79,15 @@ class GameTest {
     void afterWinningMove_stateIsWhiteWon() {
         Game game = new Game();
 
-        game.makeMove(new Position(7,7)); // B
-        game.makeMove(new Position(0,0)); // W
-        game.makeMove(new Position(7,8)); // B
-        game.makeMove(new Position(1,0)); // W
-        game.makeMove(new Position(7,9)); // B
-        game.makeMove(new Position(2,0)); // W
-        game.makeMove(new Position(7,10)); // B
-        game.makeMove(new Position(3,0)); // W
-        game.makeMove(new Position(6,10)); // B
+        game.makeMove(new Position(7, 7)); // B
+        game.makeMove(new Position(0, 0)); // W
+        game.makeMove(new Position(7, 8)); // B
+        game.makeMove(new Position(1, 0)); // W
+        game.makeMove(new Position(7, 9)); // B
+        game.makeMove(new Position(2, 0)); // W
+        game.makeMove(new Position(7, 10)); // B
+        game.makeMove(new Position(3, 0)); // W
+        game.makeMove(new Position(6, 10)); // B
         game.makeMove(new Position(4, 0)); // W -> win
 
         assertEquals(GameState.WHITE_WON, game.getState());
@@ -101,22 +98,21 @@ class GameTest {
         Game game = new Game();
 
         // BLACK vince
-        game.makeMove(new Position(7,7)); // B
-        game.makeMove(new Position(0,0)); // W
-        game.makeMove(new Position(7,8)); // B
-        game.makeMove(new Position(1,0)); // W
-        game.makeMove(new Position(7,9)); // B
-        game.makeMove(new Position(2,0)); // W
-        game.makeMove(new Position(7,10)); // B
-        game.makeMove(new Position(3,0)); // W
-        game.makeMove(new Position(7,11)); // B -> vince
+        game.makeMove(new Position(7, 7)); // B
+        game.makeMove(new Position(0, 0)); // W
+        game.makeMove(new Position(7, 8)); // B
+        game.makeMove(new Position(1, 0)); // W
+        game.makeMove(new Position(7, 9)); // B
+        game.makeMove(new Position(2, 0)); // W
+        game.makeMove(new Position(7, 10)); // B
+        game.makeMove(new Position(3, 0)); // W
+        game.makeMove(new Position(7, 11)); // B -> vince
 
         assertNotEquals(GameState.IN_PROGRESS, game.getState());
 
         assertThrows(IllegalStateException.class,
-                () -> game.makeMove(new Position(5,5)));
+                () -> game.makeMove(new Position(5, 5)));
     }
-
 
 
 }

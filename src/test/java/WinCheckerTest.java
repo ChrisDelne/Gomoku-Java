@@ -1,6 +1,6 @@
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class WinCheckerTest {
 
@@ -12,7 +12,7 @@ class WinCheckerTest {
         for (int r = 0; r < 5; r++) {
             grid.setBlackAt(r, 10);
         }
-        assertEquals(true, winChecker.isWinningMove(3, 10));
+        assertTrue(winChecker.isWinningMove(3, 10));
     }
 
     @Test
@@ -20,17 +20,16 @@ class WinCheckerTest {
         for (int i = 0; i < 5; i++) {
             grid.setBlackAt(i, i);
         }
-        assertEquals(true, winChecker.isWinningMove(2, 2));
+        assertTrue(winChecker.isWinningMove(2, 2));
     }
 
     @Test
     void isWinningMove_AntiDiagonalWin() {
         for (int i = 0; i < 5; i++) {
-            grid.setBlackAt(i, grid.getCOLUMNS()-1 - i);
+            grid.setBlackAt(i, grid.getCOLUMNS() - 1 - i);
         }
-        assertEquals(true, winChecker.isWinningMove(2, 12));
+        assertTrue(winChecker.isWinningMove(2, 12));
     }
-
 
 
     @Test
@@ -38,26 +37,26 @@ class WinCheckerTest {
         for (int c = 0; c < 5; c++) {
             grid.setBlackAt(7, c);
         }
-        assertEquals(true, winChecker.isWinningMove(7, 3));
+        assertTrue(winChecker.isWinningMove(7, 3));
     }
 
-   @Test
-   void isWinningMove_NoWin() {
-       grid.setBlackAt(0, 0);
-       grid.setBlackAt(0, 1);
-       grid.setBlackAt(0, 2);
-       grid.setBlackAt(0, 3);
-       assertEquals(false, winChecker.isWinningMove(0, 3));
-   }
+    @Test
+    void isWinningMove_NoWin() {
+        grid.setBlackAt(0, 0);
+        grid.setBlackAt(0, 1);
+        grid.setBlackAt(0, 2);
+        grid.setBlackAt(0, 3);
+        assertFalse(winChecker.isWinningMove(0, 3));
+    }
 
-   @Test
+    @Test
     void isWinningMove_noWinWithMixedColors() {
         grid.setBlackAt(5, 5);
         grid.setWhiteAt(6, 6);
         grid.setBlackAt(7, 7);
         grid.setBlackAt(8, 8);
         grid.setBlackAt(9, 9);
-        assertEquals(false, winChecker.isWinningMove(9, 9));
+        assertFalse(winChecker.isWinningMove(9, 9));
     }
 
     @Test
@@ -67,7 +66,7 @@ class WinCheckerTest {
         grid.setWhiteAt(12, 12);
         grid.setBlackAt(13, 13);
         grid.setBlackAt(14, 14);
-        assertEquals(false, winChecker.isWinningMove(12, 12));
+        assertFalse(winChecker.isWinningMove(12, 12));
     }
 
     @Test
@@ -75,7 +74,7 @@ class WinCheckerTest {
         for (int c = 10; c < 15; c++) {
             grid.setBlackAt(14, c);
         }
-        assertEquals(true, winChecker.isWinningMove(14, 12));
+        assertTrue(winChecker.isWinningMove(14, 12));
     }
 
     @Test
@@ -86,7 +85,7 @@ class WinCheckerTest {
         grid.setBlackAt(8, 7);
         grid.setBlackAt(9, 7);
         grid.setBlackAt(10, 7);
-        assertEquals(false, winChecker.isWinningMove(7, 7));
+        assertFalse(winChecker.isWinningMove(7, 7));
     }
 
     @Test
@@ -95,7 +94,7 @@ class WinCheckerTest {
             grid.setBlackAt(5, i); // Horizontal
             grid.setBlackAt(i, 5); // Vertical
         }
-        assertEquals(true, winChecker.isWinningMove(5, 2));
+        assertTrue(winChecker.isWinningMove(5, 2));
     }
 
     @Test
@@ -111,7 +110,7 @@ class WinCheckerTest {
 
     @Test
     void isWinningMove_PointIsNotOccupied() {
-        assertEquals(false, winChecker.isWinningMove(0, 0));
+        assertFalse(winChecker.isWinningMove(0, 0));
     }
 
 }

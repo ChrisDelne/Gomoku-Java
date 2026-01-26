@@ -9,13 +9,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-
 public class GridTest {
 
     //griglia 15x15
     private Grid grid;
 
-    //per sicurezza forziamo il reset per ogni test
+    //forziamo il reset per ogni test
     @BeforeEach
     void setUp() {
         grid = new Grid();
@@ -43,11 +42,10 @@ public class GridTest {
 
     @Test
     void new_grid_is_all_empty() {
-
         boolean allEmpty =
                 IntStream.range(0, grid.getROWS()).allMatch(r ->
                         IntStream.range(0, grid.getCOLUMNS()).allMatch(c ->
-                                grid.getCrossAt(r, c) == CrossState.EMPTY));
+                                grid.getStateAt(r, c) == CrossState.EMPTY));
 
         assertTrue(allEmpty);
     }
@@ -70,7 +68,7 @@ public class GridTest {
         assertEquals(expected, grid.contains(row, col));
     }
 
-    //contains (position),
+    //contains (position)
     @ParameterizedTest
     @CsvSource({
             "0,0",
@@ -90,15 +88,15 @@ public class GridTest {
     // -----------------------------
 
     @Test
-    void setBlackAt_with_int_readable_by_getCrossAt() {
+    void setBlackAt_with_int_readable_by_getStateAt() {
         grid.setBlackAt(3, 3);
-        assertEquals(CrossState.BLACK, grid.getCrossAt(3, 3));
+        assertEquals(CrossState.BLACK, grid.getStateAt(3, 3));
     }
 
     @Test
-    void setWhiteAt_with_int_readable_by_getCrossAt() {
+    void setWhiteAt_with_int_readable_by_getStateAt() {
         grid.setWhiteAt(9, 9);
-        assertEquals(CrossState.WHITE, grid.getCrossAt(9, 9));
+        assertEquals(CrossState.WHITE, grid.getStateAt(9, 9));
     }
 
     // --- isAt / isEmpty / isBlackAt / isWhiteAt (int,int) ---
@@ -134,40 +132,40 @@ public class GridTest {
     @Test
     void isEmpty_false_after_setBlackAt() {
         grid.setBlackAt(1, 1);
-        assertEquals(false, grid.isEmpty(1, 1));
+        assertFalse(grid.isEmpty(1, 1));
     }
 
     @Test
     void isBlackAt_true_after_setBlackAt() {
         grid.setBlackAt(7, 7);
-        assertEquals(true, grid.isBlackAt(7, 7));
+        assertTrue(grid.isBlackAt(7, 7));
     }
 
     @Test
     void isBlackAt_false_when_cell_is_white() {
         grid.setWhiteAt(2, 5);
-        assertEquals(false, grid.isBlackAt(2, 5));
+        assertFalse(grid.isBlackAt(2, 5));
     }
 
     @Test
     void isWhiteAt_true_after_setWhiteAt() {
         grid.setWhiteAt(8, 8);
-        assertEquals(true, grid.isWhiteAt(8, 8));
+        assertTrue(grid.isWhiteAt(8, 8));
     }
 
     @Test
     void isWhiteAt_false_when_cell_is_black() {
         grid.setBlackAt(2, 5);
-        assertEquals(false, grid.isWhiteAt(2, 5));
+        assertFalse(grid.isWhiteAt(2, 5));
     }
 
-    // --- Overload Position: getCrossAt(Position) ---
+    // --- Overload Position: getStateAt(Position) ---
 
     @Test
-    void getCrossAt_position_equals_getCrossAt_int_int() {
+    void getStateAt_position_equals_getStateAt_int_int() {
         Position p = new Position(2, 2);
         grid.setBlackAt(2, 2);
-        assertEquals(grid.getCrossAt(2, 2), grid.getCrossAt(p));
+        assertEquals(grid.getStateAt(2, 2), grid.getStateAt(p));
     }
 
     // --- Overload Position: setter ---
@@ -176,14 +174,14 @@ public class GridTest {
     void setBlackAt_position_writes_BLACK() {
         Position p = new Position(10, 10);
         grid.setBlackAt(p);
-        assertEquals(CrossState.BLACK, grid.getCrossAt(10, 10));
+        assertEquals(CrossState.BLACK, grid.getStateAt(10, 10));
     }
 
     @Test
     void setWhiteAt_position_writes_WHITE() {
         Position p = new Position(11, 11);
         grid.setWhiteAt(p);
-        assertEquals(CrossState.WHITE, grid.getCrossAt(11, 11));
+        assertEquals(CrossState.WHITE, grid.getStateAt(11, 11));
     }
 
     // --- Overload Position: isAt / isEmpty / isBlackAt / isWhiteAt ---
@@ -192,7 +190,7 @@ public class GridTest {
     void isAt_position_true_when_state_matches() {
         Position p = new Position(12, 12);
         grid.setWhiteAt(p);
-        assertEquals(true, grid.isAt(CrossState.WHITE, p));
+        assertTrue(grid.isAt(CrossState.WHITE, p));
     }
 
     @Test
@@ -205,16 +203,13 @@ public class GridTest {
     void isBlackAt_position_true_after_setBlackAt() {
         Position p = new Position(13, 13);
         grid.setBlackAt(p);
-        assertEquals(grid.isBlackAt(13,13), grid.isBlackAt(p));
+        assertEquals(grid.isBlackAt(13, 13), grid.isBlackAt(p));
     }
 
     @Test
     void isWhiteAt_position_true_after_setWhiteAt() {
         Position p = new Position(14, 14);
         grid.setWhiteAt(p);
-        assertEquals(grid.isWhiteAt(14,14), grid.isWhiteAt(p));
+        assertEquals(grid.isWhiteAt(14, 14), grid.isWhiteAt(p));
     }
 }
-
-
-
