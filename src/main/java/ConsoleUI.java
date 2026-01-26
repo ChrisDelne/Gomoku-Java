@@ -36,7 +36,8 @@ public class ConsoleUI {
                     int x = Integer.parseInt(m.group(1));
                     int y = Integer.parseInt(m.group(2));
 
-                    //return new int[]{x, y};      // 8) ritorna la coppia -> esci dal metodo
+                    // 8) ritorna la coppia -> esci dal metodo
+                    //-1 converte da numero vero ad indice
                     return new Position(x, y);
                 } catch (NumberFormatException ex) {
                     // caso: numero enorme fuori range di int
@@ -50,15 +51,22 @@ public class ConsoleUI {
 
 
 
-
+    //gestire exception EOF
+    //gestire numeri griglia != indici griglia
 
     public void use(TurnBasedGame game){
         while (game.getState() == GameState.IN_PROGRESS) {
 
+            try {
                 MoveResult moveResult = game.makeMove(readPosition("scrivi una posizione valida sulla griglia: "));
                 while (!moveResult.isValid()) {
                     moveResult = game.makeMove(readPosition("scrivi una nuova posizione valida sulla griglia: "));
                 }
+            }catch (IllegalStateException eof){
+                out.println("\nInput terminato. Uscita dalla partita.");
+                return; //esce
+            }
+
         }
     }
 }

@@ -238,11 +238,30 @@ public class ConsoleUITest {
         // Assert sull'output stampato
         String printed = outBuffer.toString(StandardCharsets.UTF_8);
 
-        assertTrue(countOccurrences(printed, "una nuova posizione") == 2,
+        assertEquals(countOccurrences(printed, "una nuova posizione"),2,
                 "Mi aspetto che il prompt di rihciesta nuova venga mostrato due volte. Output:\n" + printed);
 
     }
 
-    //mi sono alzato ma ora funziona
+    @Test
+    void use_printsMessage_and_exits_when_input_ends() {
+        // Arrange: EOF immediato
+        Scanner in = new Scanner(new ByteArrayInputStream(new byte[0]));
+        ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
+        PrintStream out = new PrintStream(outBuffer, true, StandardCharsets.UTF_8);
+
+        ConsoleUI ui = new ConsoleUI(in, out);
+
+        FakeGame game = new FakeGame().withState(GameState.IN_PROGRESS);
+
+        // Act + Assert: non deve propagare l'eccezione
+        assertDoesNotThrow(() -> ui.use(game));
+
+        // Assert: deve stampare il messaggio di uscita
+        String printed = outBuffer.toString(StandardCharsets.UTF_8);
+        assertTrue(printed.contains("Input terminato. Uscita dalla partita."),
+                "Mi aspetto un messaggio di uscita quando l'input termina. Output:\n" + printed);
+    }
+
 
 }

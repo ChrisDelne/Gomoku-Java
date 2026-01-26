@@ -99,6 +99,17 @@ class WinCheckerTest {
     }
 
     @Test
+    void Win_Multiple_Directions_more_of_five() {
+        for (int i = 0; i < 7; i++) {
+            grid.setBlackAt(5, i); // Horizontal
+            grid.setBlackAt(i, 5); // Vertical
+        }
+        assertEquals(true, winChecker.isWinningMove(5, 2));
+        assertEquals(true, winChecker.isWinningMove(5, 3));
+        assertEquals(true, winChecker.isWinningMove(6, 5));
+    }
+
+    @Test
     void isWinningMove_PointIsNotOccupied() {
         assertEquals(false, winChecker.isWinningMove(0, 0));
     }

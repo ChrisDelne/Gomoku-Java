@@ -36,7 +36,7 @@ public class WinChecker {
         } //se la croce di partenza è vuota non può essere una mossa vincente
 
         for (Direction direction : Direction.values()) {
-            if (consecutiveCountBothDirections(position, direction, startCrossColor) >= WIN_LENGHT) {
+            if (consecutiveCountBothDirections(position, direction, startCrossColor) >= WIN_LENGHT) {//per richiedere 5 preciso disattivare il test Win_Multiple_Directions_more_of_five
                 return true;
             }
         }
