@@ -10,12 +10,21 @@ import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class ConsoleUITest {
 
+    // Helper per contare quante volte una sottostringa compare nell'output
+    private static int countOccurrences(String text, String sub) {
+        int count = 0;
+        int idx = 0;
+        while ((idx = text.indexOf(sub, idx)) != -1) {
+            count++;
+            idx += sub.length();
+        }
+        return count;
+    }
 
     //prima vanno implementati i test di lettura
 
@@ -28,6 +37,65 @@ public class ConsoleUITest {
         ConsoleUI ui = new ConsoleUI(in, out);
 
         assertEquals(new Position(10, 20), ui.readPosition(""));
+    }
+
+
+    @Test
+    void readPosition_whenInputDoesNotMatchRegex_printsErrorAndRetries() {
+        // Arrange: prima riga invalida, poi riga valida (così il metodo termina)
+        String userInput = "ciao mondo\n10 20\n";
+        Scanner in = new Scanner(new ByteArrayInputStream(userInput.getBytes(StandardCharsets.UTF_8)));
+
+        ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
+        PrintStream out = new PrintStream(outBuffer, true, StandardCharsets.UTF_8);
+
+        ConsoleUI ui = new ConsoleUI(in, out);
+
+        // Act
+        Position p = ui.readPosition("Inserisci mossa: ");
+
+        // Assert sul valore ritornato
+        assertEquals(new Position(10, 20), p);
+
+        // Assert sull'output stampato
+        String printed = outBuffer.toString(StandardCharsets.UTF_8);
+
+        // 1) ha stampato almeno un messaggio di errore
+        assertTrue(printed.contains("Input non valido"),
+                "Mi aspetto un messaggio che segnali input non valido. Output:\n" + printed);
+
+        // 2) (opzionale) ha mostrato il prompt almeno due volte (una per ogni tentativo)
+        assertTrue(countOccurrences(printed, "Inserisci mossa: ") == 2,
+                "Mi aspetto che il prompt venga mostrato almeno due volte. Output:\n" + printed);
+    }
+
+    @Test
+    void readPosition_whenNumberTooLarge_printsRangeErrorAndRetries() {
+        // Arrange: numero fuori range per int, poi riga valida
+        // 9999999999999999999 non entra in int -> Integer.parseInt lancia NumberFormatException
+        String userInput = "9999999999999999999 20\n10 20\n";
+        Scanner in = new Scanner(new ByteArrayInputStream(userInput.getBytes(StandardCharsets.UTF_8)));
+
+        ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
+        PrintStream out = new PrintStream(outBuffer, true, StandardCharsets.UTF_8);
+
+        ConsoleUI ui = new ConsoleUI(in, out);
+
+        // Act
+        Position p = ui.readPosition("Inserisci mossa: ");
+
+        // Assert sul valore ritornato
+        assertEquals(new Position(10, 20), p);
+
+        // Assert sull'output stampato
+        String printed = outBuffer.toString(StandardCharsets.UTF_8);
+
+        assertTrue(printed.contains("fuori range") || printed.contains("Valore fuori range"),
+                "Mi aspetto un messaggio che segnali overflow/fuori range. Output:\n" + printed);
+
+        // (opzionale) prompt almeno due volte
+        assertTrue(countOccurrences(printed, "Inserisci mossa: ") == 2,
+                "Mi aspetto che il prompt venga mostrato almeno due volte. Output:\n" + printed);
     }
 
     //scarta gli imput non validi
