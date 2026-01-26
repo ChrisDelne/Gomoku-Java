@@ -15,7 +15,7 @@ public enum MoveResult {
         return valid;
     }
 
-    public String reason() {
+    public String getReason() {
         return reasonWhy;
     }
 
