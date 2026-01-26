@@ -1,4 +1,4 @@
-public class Game implements GameAPI{
+public class Game implements TurnBasedGame {
 
     private final Grid grid;
     private GameState state;

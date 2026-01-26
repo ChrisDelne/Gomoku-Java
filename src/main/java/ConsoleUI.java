@@ -52,9 +52,13 @@ public class ConsoleUI {
 
 
 
-    public void use(GameAPI game){
+    public void use(TurnBasedGame game){
         while (game.getState() == GameState.IN_PROGRESS) {
-            continue;
+
+                MoveResult moveResult = game.makeMove(readPosition("scrivi una posizione valida sulla griglia: "));
+                while (!moveResult.isValid()) {
+                    moveResult = game.makeMove(readPosition("scrivi una nuova posizione valida sulla griglia: "));
+                }
         }
     }
 }

@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
-public class FakeGame implements GameAPI {
+public class FakeGame implements TurnBasedGame {
 
 
     // -------------------------
@@ -22,7 +22,7 @@ public class FakeGame implements GameAPI {
     // -------------------------
     // Stateful: cambio stato dopo N mosse
     // -------------------------
-    private int changeStateAfterMoves = -1; // -1 = disabilitato
+    private int changeStateAfterMoves = 0; // 0 = disabilitato
     private GameState stateAfterChange = null;
 
 
@@ -46,7 +46,7 @@ public class FakeGame implements GameAPI {
 
         // Se configurato, cambia lo stato dopo N chiamate (utile per far terminare un loop UI)
         //controlliamo sia impostato ad un valore valido(non -1) e nel caso facciamo il confronto
-        if (changeStateAfterMoves >= 0 && makeMoveCallCount >= changeStateAfterMoves) {
+        if (changeStateAfterMoves > 0 && makeMoveCallCount >= changeStateAfterMoves) {
             if (stateAfterChange != null) {
                 state = stateAfterChange;
             }

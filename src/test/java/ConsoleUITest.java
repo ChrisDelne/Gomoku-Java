@@ -26,7 +26,9 @@ public class ConsoleUITest {
         return count;
     }
 
-    //prima vanno implementati i test di lettura
+    // =========================================================
+    // lettura input
+    // =========================================================
 
     // legge piu input validi
     @Test
@@ -74,7 +76,7 @@ public class ConsoleUITest {
 
         // 2) (opzionale) ha mostrato il prompt almeno due volte (una per ogni tentativo)
         assertTrue(countOccurrences(printed, "Inserisci mossa: ") == 2,
-                "Mi aspetto che il prompt venga mostrato almeno due volte. Output:\n" + printed);
+                "Mi aspetto che il prompt venga mostrato due volte. Output:\n" + printed);
     }
 
     @ParameterizedTest
@@ -108,7 +110,7 @@ public class ConsoleUITest {
 
         // (opzionale) prompt almeno due volte
         assertTrue(countOccurrences(printed, "Inserisci mossa: ") == 2,
-                "Mi aspetto che il prompt venga mostrato almeno due volte. Output:\n" + printed);
+                "Mi aspetto che il prompt venga mostrato due volte. Output:\n" + printed);
     }
 
     //scarta gli imput non validi
@@ -139,21 +141,24 @@ public class ConsoleUITest {
         assertThrows(IllegalStateException.class, () -> ui.readPosition(""));
     }
 
+    //testare pure imput terminato
 
+    // =========================================================
+    // use
+    // =========================================================
 
 
     //ConsoleUI consoleUI = new ConsoleUI(new Scanner(System.in), System.out);
-    @Disabled
     @Test
     void in_progres_make_move(){
         FakeGame game = new FakeGame()
-                .withState(GameState.IN_PROGRESS);
+                .withState(GameState.IN_PROGRESS)
+                .endGameAfterMoves(3, GameState.BLACK_WON);
 
 
-        String userInput = "1 2\n";
+        String userInput = "1 2\n1 3\n1 4\n";
         Scanner in = new Scanner(new ByteArrayInputStream(userInput.getBytes(StandardCharsets.UTF_8)));
 
-        // da valutare
         ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
         PrintStream out = new PrintStream(outBuffer, true, StandardCharsets.UTF_8);
 
@@ -163,7 +168,7 @@ public class ConsoleUITest {
         consoleUI.use(game);
 
         // Assert: nessuna mossa applicata
-        assertEquals(1, game.getMakeMoveCallCount(),
+        assertEquals(3, game.getMakeMoveCallCount(),
                 "Se lo stato è IN_PROGRESS, ConsoleUI deve chiamare makeMove().");
 
 
@@ -172,11 +177,16 @@ public class ConsoleUITest {
 
 
     //se lo stato non è in progress non applica la mossa
-    @Disabled
-    @Test
-    void not_in_progres_no_move(){
+    @ParameterizedTest
+    @CsvSource({
+            "BLACK_WON",
+            "WHITE_WON",
+            "DRAW"
+    })
+
+    void not_in_progres_no_move(GameState state){
         FakeGame game = new FakeGame()
-                .withState(GameState.BLACK_WON);
+                .withState(state);
 
         // Input "finto": anche se l'utente scrivesse una mossa, la UI non dovrebbe leggerla
         String userInput = "1 2\n";
@@ -198,5 +208,41 @@ public class ConsoleUITest {
 
     }
 
+    //test che amministra una mossa non valida per la logica di gioco
+    @ParameterizedTest
+    @CsvSource({
+            "OUT_OF_BOUNDS",
+            "POSITION_OCCUPIED"
+    })
+    void invalid_gameMove_in_gameLogic(MoveResult result){
+        FakeGame game = new FakeGame()
+                .withScriptedMoveResults(result, MoveResult.VALID_MOVE, result, MoveResult.VALID_MOVE)
+                .endGameAfterMoves(4, GameState.BLACK_WON);
+
+
+        String userInput = "0 -1\n 0, 0\n -3 -8\n 3 3\n";
+        Scanner in = new Scanner(new ByteArrayInputStream(userInput.getBytes(StandardCharsets.UTF_8)));
+
+        // Output catturato (opzionale, utile se vuoi controllare cosa stampa)
+        ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
+        PrintStream out = new PrintStream(outBuffer, true, StandardCharsets.UTF_8);
+
+        ConsoleUI consoleUI = new ConsoleUI(in, out);
+
+
+
+
+        // Act
+        consoleUI.use(game);
+
+        // Assert sull'output stampato
+        String printed = outBuffer.toString(StandardCharsets.UTF_8);
+
+        assertTrue(countOccurrences(printed, "una nuova posizione") == 2,
+                "Mi aspetto che il prompt di rihciesta nuova venga mostrato due volte. Output:\n" + printed);
+
+    }
+
+    //mi sono alzato ma ora funziona
 
 }
