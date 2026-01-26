@@ -111,7 +111,7 @@ public class ConsoleUI {
             out.print(' ');
 
             for (int c = 0; c < cols; c++) {
-                out.print(symbol(g.getCrossAt(r, c)));
+                out.print(symbol(g.getStateAt(r, c)));
                 if (c != cols - 1) out.print(' ');
             }
 
