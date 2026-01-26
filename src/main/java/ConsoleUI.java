@@ -56,6 +56,8 @@ public class ConsoleUI {
 
     public void use(TurnBasedGame game){
         while (game.getState() == GameState.IN_PROGRESS) {
+            clearScreen();
+            printGrid(game.getGrid());
 
             try {
                 MoveResult moveResult = game.makeMove(readPosition("scrivi una posizione valida sulla griglia: "));
@@ -69,4 +71,73 @@ public class ConsoleUI {
 
         }
     }
+
+    private void clearScreen() {
+        // ANSI: clear entire screen + cursor to home
+        out.print("\u001B[H\u001B[2J");
+        out.flush();
+    }
+
+    private void printGrid(Grid g) {
+        final int rows = g.getROWS();
+        final int cols = g.getCOLUMNS();
+
+        // Ogni cella è stampata come: "<simbolo><spazio>", tranne l'ultima senza spazio finale.
+        // Quindi larghezza contenuto = 2*cols - 1
+        final int contentWidth = 2 * cols - 1;
+
+        // Header colonne (allineato all'inizio delle celle)
+        out.print("     "); // 5 spazi: allinea con "rr │ " (2 + 1 + 1 + 1)
+        for (int c = 0; c < cols; c++) {
+            if (c < 10)out.print(c+" "); // 0..9: una cifra
+            else out.print(c);                    // 10..14: due cifre (qui va gestito lo spazio sotto)
+            if (c != cols - 1) out.print(' ');
+        }
+        out.println();
+
+        // Bordo superiore
+        out.print("   "); // 3 spazi (allinea sotto il header)
+        out.print('┌');
+        for (int i = 0; i < contentWidth + 2; i++) out.print('─'); // +2 per gli spazi interni "│ <cells> │"
+        out.print('┐');
+        out.println();
+
+        // Righe
+        for (int r = 0; r < rows; r++) {
+            // Etichetta riga (2 caratteri minimi per allineare 0..14)
+            out.printf("%2d ", r);
+
+            out.print('│');
+            out.print(' ');
+
+            for (int c = 0; c < cols; c++) {
+                out.print(symbol(g.getCrossAt(r, c)));
+                if (c != cols - 1) out.print(' ');
+            }
+
+            out.print(' ');
+            out.print('│');
+            out.println();
+        }
+
+        // Bordo inferiore
+        out.print("   ");
+        out.print('└');
+        for (int i = 0; i < contentWidth + 2; i++) out.print('─');
+        out.print('┘');
+        out.println();
+    }
+
+    private char symbol(CrossState cs) {
+        return switch (cs) {
+            case EMPTY -> '·';
+            case BLACK -> '●';
+            case WHITE -> '○';
+        };
+    }
+
+
+
+
+
 }
