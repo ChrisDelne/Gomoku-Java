@@ -13,5 +13,9 @@ public class ConsoleUI {
     }
 
 
-    public void play(GameAPI game){}
+    public void use(GameAPI game){
+        while (game.getState() == GameState.IN_PROGRESS) {
+            continue;
+        }
+    }
 }
