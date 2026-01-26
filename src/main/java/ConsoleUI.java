@@ -11,6 +11,22 @@ public class ConsoleUI {
     // Accetta: "12 34", "12,34", "  -5   10  " ecc. (spazi e/o virgola come separatore)
     private static final Pattern TWO_INTS = Pattern.compile("^\\s*([+-]?\\d+)\\s*[ ,;]+\\s*([+-]?\\d+)\\s*$");
 
+    //--------------> Idea futura: evidenziare ultima mossa (necessario però tenerne traccia)
+    //--------------> TO DO: visualizzazione turno, giocatore giocante e messaggio vittoria/pareggio/mossa illecita (es: MoveResult.getReason())
+    private static final boolean USE_COLORS = true; //Interruttore globale dei colori
+
+    //private static final String BLACK = "\u001B[30m";
+    private static final String RED = "\u001B[31m";
+    private static final String GREEN = "\u001B[32m";
+    //private static final String YELLOW = "\u001B[33m";
+    //private static final String BLUE = "\u001B[34m";
+    //private static final String PURPLE = "\u001B[35m";
+    //private static final String CYAN = "\u001B[36m";
+    //private static final String WHITE = "\u001B[37m";
+
+    private static final String BRIGHT_WHITE = "\u001B[97m";
+    //private static final String BRIGHT_BLACK = "\u001B[90m";
+
     public ConsoleUI(Scanner in, PrintStream out) {
         this.in = in;
         this.out = out;
@@ -78,6 +94,19 @@ public class ConsoleUI {
         out.flush();
     }
 
+    private String colored(String color, String text) {
+        return USE_COLORS ? color + text + "\u001B[0m" : text;
+    }
+
+    private String symbol(CrossState state) {
+        return switch (state) {
+            case EMPTY -> colored(BRIGHT_WHITE, "\u00B7"); // punto centrale
+            case BLACK -> colored(RED, "\u25CF"); // cerchio pieno
+            case WHITE -> colored(GREEN, "\u25CB"); // cerchio vuoto
+        };
+    }
+
+
     private void printGrid(Grid g) {
         final int rows = g.getROWS();
         final int cols = g.getCOLUMNS();
@@ -89,7 +118,7 @@ public class ConsoleUI {
         // Header colonne (allineato all'inizio delle celle)
         out.print("     "); // 5 spazi: allinea con "rr │ " (2 + 1 + 1 + 1)
         for (int c = 0; c < cols; c++) {
-            if (c < 10)out.print(c+" "); // 0..9: una cifra
+            if (c < 10)out.print(c + " "); // 0..9: una cifra
             else out.print(c);                    // 10..14: due cifre (qui va gestito lo spazio sotto)
             if (c != cols - 1) out.print(' ');
         }
@@ -98,7 +127,7 @@ public class ConsoleUI {
         // Bordo superiore
         out.print("   "); // 3 spazi (allinea sotto il header)
         out.print('┌');
-        for (int i = 0; i < contentWidth + 2; i++) out.print('─'); // +2 per gli spazi interni "│ <cells> │"
+        for (int i = 0; i < contentWidth + 16; i++) out.print('─'); // +2 per gli spazi interni "│ <cells> │"
         out.print('┐');
         out.println();
 
@@ -111,11 +140,10 @@ public class ConsoleUI {
             out.print(' ');
 
             for (int c = 0; c < cols; c++) {
-                out.print(symbol(g.getStateAt(r, c)));
+                out.print(symbol(g.getStateAt(r, c)) + " ");
                 if (c != cols - 1) out.print(' ');
             }
 
-            out.print(' ');
             out.print('│');
             out.println();
         }
@@ -123,21 +151,9 @@ public class ConsoleUI {
         // Bordo inferiore
         out.print("   ");
         out.print('└');
-        for (int i = 0; i < contentWidth + 2; i++) out.print('─');
+        for (int i = 0; i < contentWidth + 16; i++) out.print('─');
         out.print('┘');
         out.println();
     }
-
-    private char symbol(CrossState cs) {
-        return switch (cs) {
-            case EMPTY -> '·';
-            case BLACK -> '●';
-            case WHITE -> '○';
-        };
-    }
-
-
-
-
 
 }
