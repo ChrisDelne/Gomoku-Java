@@ -81,7 +81,7 @@ public class GridTest {
             "0,15"
     })
     void contains_position_equals_contains_int_int(int row, int col) {
-        Grid.Position p = new Grid.Position(row, col);
+        Position p = new Position(row, col);
         assertEquals(grid.contains(row, col), grid.contains(p));
     }
 
@@ -165,7 +165,7 @@ public class GridTest {
 
     @Test
     void getCrossAt_position_equals_getCrossAt_int_int() {
-        Grid.Position p = new Grid.Position(2, 2);
+        Position p = new Position(2, 2);
         grid.setBlackAt(2, 2);
         assertEquals(grid.getCrossAt(2, 2), grid.getCrossAt(p));
     }
@@ -174,14 +174,14 @@ public class GridTest {
 
     @Test
     void setBlackAt_position_writes_BLACK() {
-        Grid.Position p = new Grid.Position(10, 10);
+        Position p = new Position(10, 10);
         grid.setBlackAt(p);
         assertEquals(CrossState.BLACK, grid.getCrossAt(10, 10));
     }
 
     @Test
     void setWhiteAt_position_writes_WHITE() {
-        Grid.Position p = new Grid.Position(11, 11);
+        Position p = new Position(11, 11);
         grid.setWhiteAt(p);
         assertEquals(CrossState.WHITE, grid.getCrossAt(11, 11));
     }
@@ -190,27 +190,27 @@ public class GridTest {
 
     @Test
     void isAt_position_true_when_state_matches() {
-        Grid.Position p = new Grid.Position(12, 12);
+        Position p = new Position(12, 12);
         grid.setWhiteAt(p);
         assertEquals(true, grid.isAt(CrossState.WHITE, p));
     }
 
     @Test
     void isEmpty_position_true_on_new_grid() {
-        Grid.Position p = new Grid.Position(0, 0);
+        Position p = new Position(0, 0);
         assertEquals(grid.isEmpty(0, 0), grid.isEmpty(p));
     }
 
     @Test
     void isBlackAt_position_true_after_setBlackAt() {
-        Grid.Position p = new Grid.Position(13, 13);
+        Position p = new Position(13, 13);
         grid.setBlackAt(p);
         assertEquals(grid.isBlackAt(13,13), grid.isBlackAt(p));
     }
 
     @Test
     void isWhiteAt_position_true_after_setWhiteAt() {
-        Grid.Position p = new Grid.Position(14, 14);
+        Position p = new Position(14, 14);
         grid.setWhiteAt(p);
         assertEquals(grid.isWhiteAt(14,14), grid.isWhiteAt(p));
     }

@@ -5,7 +5,7 @@ public class DrawChecker {
         this.grid = grid;
     }
 
-    private int countNoOpponentFromNextPosition(Grid.Position position, int deltaRow, int deltaColumn, CrossState opponentColor) {
+    private int countNoOpponentFromNextPosition(Position position, int deltaRow, int deltaColumn, CrossState opponentColor) {
         int nextRow = position.row() + deltaRow;
         int nextColumn = position.col() + deltaColumn;
         int count = 0;
@@ -18,7 +18,7 @@ public class DrawChecker {
         return count;
     }
 
-    private int countNoOpponentBothDirections(Grid.Position position, Direction direction, CrossState opponentColor) {
+    private int countNoOpponentBothDirections(Position position, Direction direction, CrossState opponentColor) {
         int deltaRow = direction.deltaRow();
         int deltaColumn = direction.deltaColumn();
 
@@ -32,7 +32,7 @@ public class DrawChecker {
         //scorriamo tutta la matrice
         for (int r = 0; r < grid.getROWS(); r++) {
             for (int c = 0; c < grid.getCOLUMNS(); c++) {
-                Grid.Position position = new Grid.Position(r, c);
+                Position position = new Position(r, c);
                 //ci fermiamo quando troviamo una posizione vuota
                 if (grid.isEmpty(position)) {
                     //testiamo se da questa posizione c'è una finestra vincente per il giocatore

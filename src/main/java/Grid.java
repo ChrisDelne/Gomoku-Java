@@ -1,9 +1,5 @@
 public class Grid {
 
-    //lo si puo rinominare coordinate o cross e rinominare cross in CrossState
-    public record Position(int row, int col) {
-
-    }
 
     private final int ROWS = 15;
     private final int COLUMNS = 15;

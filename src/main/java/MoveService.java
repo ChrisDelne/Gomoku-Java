@@ -6,7 +6,7 @@ public class MoveService {
         this.grid = grid;
     }
 
-    public MoveResult registerMove(Player player, Grid.Position position) {
+    public MoveResult registerMove(Player player, Position position) {
         if (!grid.contains(position))
             return MoveResult.OUT_OF_BOUNDS;
         if (!grid.isEmpty(position))

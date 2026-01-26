@@ -36,7 +36,7 @@ public class Game implements GameAPI{
     //il primo fa pure gli altri tre, non è chiaro dal nome
     //e dividerli aumenta l'indipendenza tra le responsabilità
     //renderei lo scambio di turni una responsabilità della ConsoleUI e non di questo metodo
-    public MoveResult makeMove(Grid.Position position) {
+    public MoveResult makeMove(Position position) {
         if (state != GameState.IN_PROGRESS)
             throw new IllegalStateException("Game not in progress");
 
@@ -48,7 +48,7 @@ public class Game implements GameAPI{
     }
 
 
-    private void advanceGameAfterValidMove(Grid.Position position) {
+    private void advanceGameAfterValidMove(Position position) {
         if (winChecker.isWinningMove(position)) { // vittoria
             state = (currentPlayer == Player.BLACK) ? GameState.BLACK_WON : GameState.WHITE_WON;
             return;

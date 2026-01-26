@@ -5,6 +5,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.Console;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
@@ -16,6 +17,24 @@ public class ConsoleUITest {
 
 
     //prima vanno implementati i test di lettura
+
+    // legge piu input validi
+    @Test
+    void Console_can_read_2_int_from_input() {
+        Scanner in = new Scanner(new ByteArrayInputStream("10 20\n".getBytes(StandardCharsets.UTF_8)));
+        PrintStream out = new PrintStream(new ByteArrayOutputStream(), true, StandardCharsets.UTF_8);
+
+        ConsoleUI ui = new ConsoleUI(in, out);
+
+        assertEquals(new Position(10, 20), ui.readPosition(""));
+    }
+
+    //scarta gli imput non validi
+
+    //lancia eccezione EOF
+
+
+
 
     //ConsoleUI consoleUI = new ConsoleUI(new Scanner(System.in), System.out);
     @Disabled
