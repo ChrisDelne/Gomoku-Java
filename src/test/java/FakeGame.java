@@ -30,6 +30,7 @@ public class FakeGame implements GameAPI {
     // Spy: dati registrati
     // -------------------------
     private int makeMoveCallCount = 0;
+    //farla diventare una lista delle mosse effettivamente attuate oppure crearne una seconda
     private final List<Position> receivedPositions = new ArrayList<>();
 
 
