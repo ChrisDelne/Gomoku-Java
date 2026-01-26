@@ -30,7 +30,7 @@ public class FakeGame implements GameAPI {
     // Spy: dati registrati
     // -------------------------
     private int makeMoveCallCount = 0;
-    private final List<Grid.Position> receivedPositions = new ArrayList<>();
+    private final List<Position> receivedPositions = new ArrayList<>();
 
 
     // =========================================================
@@ -39,7 +39,7 @@ public class FakeGame implements GameAPI {
 
 
     @Override
-    public MoveResult makeMove(Grid.Position position) {
+    public MoveResult makeMove(Position position) {
         makeMoveCallCount++;
         receivedPositions.add(position);
 
@@ -138,12 +138,12 @@ public class FakeGame implements GameAPI {
     }
 
     /** Ritorna una copia delle posizioni ricevute, in ordine. */
-    public List<Grid.Position> getReceivedPositions() {
+    public List<Position> getReceivedPositions() {
         return new ArrayList<>(receivedPositions);
     }
 
     /** Ultima posizione ricevuta, o null se nessuna. */
-    public Grid.Position getLastReceivedPosition() {
+    public Position getLastReceivedPosition() {
         if (receivedPositions.isEmpty()) return null;
         return receivedPositions.getLast();
     }

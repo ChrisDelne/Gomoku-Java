@@ -27,7 +27,7 @@ class GameTest {
     })
     void turnSwitchesAfterValidMove(int row, int col) {
         Game game = new Game();
-        Grid.Position position = new Grid.Position(row, col);
+        Position position = new Position(row, col);
         game.makeMove(position);
         assertEquals(Player.WHITE, game.getCurrentPlayer());
     }
@@ -45,10 +45,10 @@ class GameTest {
         switch (scenario) {
             case "OUT_OF_BOUNDS" -> {
                 startingPlayer = game.getCurrentPlayer();
-                result = game.makeMove(new Grid.Position(-1, 1));
+                result = game.makeMove(new Position(-1, 1));
             }
             case "POSITION_OCCUPIED" -> {
-                Grid.Position pos = new Grid.Position(5, 5);
+                Position pos = new Position(5, 5);
                 game.makeMove(pos);              //Valida
                 startingPlayer = game.getCurrentPlayer();
                 result = game.makeMove(pos);     //Invalida
@@ -65,15 +65,15 @@ class GameTest {
     void afterWinningMove_stateIsBlackWon() {
         Game game = new Game();
 
-        game.makeMove(new Grid.Position(7,7)); // B
-        game.makeMove(new Grid.Position(0,0)); // W
-        game.makeMove(new Grid.Position(7,8)); // B
-        game.makeMove(new Grid.Position(1,0)); // W
-        game.makeMove(new Grid.Position(7,9)); // B
-        game.makeMove(new Grid.Position(2,0)); // W
-        game.makeMove(new Grid.Position(7,10)); // B
-        game.makeMove(new Grid.Position(3,0)); // W
-        game.makeMove(new Grid.Position(7,11)); // B -> win
+        game.makeMove(new Position(7,7)); // B
+        game.makeMove(new Position(0,0)); // W
+        game.makeMove(new Position(7,8)); // B
+        game.makeMove(new Position(1,0)); // W
+        game.makeMove(new Position(7,9)); // B
+        game.makeMove(new Position(2,0)); // W
+        game.makeMove(new Position(7,10)); // B
+        game.makeMove(new Position(3,0)); // W
+        game.makeMove(new Position(7,11)); // B -> win
 
         assertEquals(GameState.BLACK_WON, game.getState());
     }
@@ -82,16 +82,16 @@ class GameTest {
     void afterWinningMove_stateIsWhiteWon() {
         Game game = new Game();
 
-        game.makeMove(new Grid.Position(7,7)); // B
-        game.makeMove(new Grid.Position(0,0)); // W
-        game.makeMove(new Grid.Position(7,8)); // B
-        game.makeMove(new Grid.Position(1,0)); // W
-        game.makeMove(new Grid.Position(7,9)); // B
-        game.makeMove(new Grid.Position(2,0)); // W
-        game.makeMove(new Grid.Position(7,10)); // B
-        game.makeMove(new Grid.Position(3,0)); // W
-        game.makeMove(new Grid.Position(6,10)); // B
-        game.makeMove(new Grid.Position(4, 0)); // W -> win
+        game.makeMove(new Position(7,7)); // B
+        game.makeMove(new Position(0,0)); // W
+        game.makeMove(new Position(7,8)); // B
+        game.makeMove(new Position(1,0)); // W
+        game.makeMove(new Position(7,9)); // B
+        game.makeMove(new Position(2,0)); // W
+        game.makeMove(new Position(7,10)); // B
+        game.makeMove(new Position(3,0)); // W
+        game.makeMove(new Position(6,10)); // B
+        game.makeMove(new Position(4, 0)); // W -> win
 
         assertEquals(GameState.WHITE_WON, game.getState());
     }
@@ -101,20 +101,20 @@ class GameTest {
         Game game = new Game();
 
         // BLACK vince
-        game.makeMove(new Grid.Position(7,7)); // B
-        game.makeMove(new Grid.Position(0,0)); // W
-        game.makeMove(new Grid.Position(7,8)); // B
-        game.makeMove(new Grid.Position(1,0)); // W
-        game.makeMove(new Grid.Position(7,9)); // B
-        game.makeMove(new Grid.Position(2,0)); // W
-        game.makeMove(new Grid.Position(7,10)); // B
-        game.makeMove(new Grid.Position(3,0)); // W
-        game.makeMove(new Grid.Position(7,11)); // B -> vince
+        game.makeMove(new Position(7,7)); // B
+        game.makeMove(new Position(0,0)); // W
+        game.makeMove(new Position(7,8)); // B
+        game.makeMove(new Position(1,0)); // W
+        game.makeMove(new Position(7,9)); // B
+        game.makeMove(new Position(2,0)); // W
+        game.makeMove(new Position(7,10)); // B
+        game.makeMove(new Position(3,0)); // W
+        game.makeMove(new Position(7,11)); // B -> vince
 
         assertNotEquals(GameState.IN_PROGRESS, game.getState());
 
         assertThrows(IllegalStateException.class,
-                () -> game.makeMove(new Grid.Position(5,5)));
+                () -> game.makeMove(new Position(5,5)));
     }
 
 

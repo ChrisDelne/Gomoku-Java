@@ -15,7 +15,7 @@ public class MoveServiceTest {
             "5, -1, OUT_OF_BOUNDS"
     })
     void registerMoveOutOfBound(int row, int col, MoveResult expectedResult) {
-        Grid.Position position = new Grid.Position(row, col);
+        Position position = new Position(row, col);
         moveService = new MoveService(new Grid());
         MoveResult result = moveService.registerMove(Player.BLACK, position);
         assertEquals(expectedResult, result);
@@ -29,7 +29,7 @@ public class MoveServiceTest {
             "0, 6, VALID_MOVE"
     })
     void registerMoveValid(int row, int col, MoveResult expectedResult) {
-        Grid.Position position = new Grid.Position(row, col);
+        Position position = new Position(row, col);
         moveService = new MoveService(new Grid());
         MoveResult result = moveService.registerMove(Player.WHITE, position);
         assertEquals(expectedResult, result);
@@ -43,7 +43,7 @@ public class MoveServiceTest {
             "1, 9, POSITION_OCCUPIED"
     })
     void registerMovePositionOccupied(int row, int col, MoveResult expectedResult) {
-        Grid.Position position = new Grid.Position(row, col);
+        Position position = new Position(row, col);
         moveService = new MoveService(new Grid());
         moveService.registerMove(Player.BLACK, position); //Occupo la posizione
         MoveResult result = moveService.registerMove(Player.WHITE, position); //Dovrebbe essere occupata
@@ -60,7 +60,7 @@ public class MoveServiceTest {
     void validMoveOccupiesTheGrid(int row, int col) {
         Grid grid = new Grid();
         moveService = new MoveService(grid);
-        Grid.Position position = new Grid.Position(row, col);
+        Position position = new Position(row, col);
         MoveResult result = moveService.registerMove(Player.BLACK, position);
         assertEquals(MoveResult.VALID_MOVE, result);
         assertFalse(grid.isEmpty(position));

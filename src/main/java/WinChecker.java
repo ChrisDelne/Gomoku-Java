@@ -8,7 +8,7 @@ public class WinChecker {
     }
 
     //forse qua dentro il while si puo continuare ad usare position invece di dividerlo. però così bisogna scorrere creando un nuovo punto ogni volta
-    private int consecutiveCountFromNextPosition(Grid.Position position, int deltaRow, int deltaColumn, CrossState startCrossColor) {
+    private int consecutiveCountFromNextPosition(Position position, int deltaRow, int deltaColumn, CrossState startCrossColor) {
         int nextRow = position.row() + deltaRow;
         int nextColumn = position.col() + deltaColumn;
         int count = 0;
@@ -21,7 +21,7 @@ public class WinChecker {
         return count;
     }
 
-    private int consecutiveCountBothDirections(Grid.Position position, Direction direction, CrossState startCrossColor) {
+    private int consecutiveCountBothDirections(Position position, Direction direction, CrossState startCrossColor) {
         int deltaRow = direction.deltaRow();
         int deltaColumn = direction.deltaColumn();
 
@@ -29,7 +29,7 @@ public class WinChecker {
                  + consecutiveCountFromNextPosition(position, -deltaRow, -deltaColumn, startCrossColor);
     }
 
-    public boolean isWinningMove(Grid.Position position) {
+    public boolean isWinningMove(Position position) {
         CrossState startCrossColor = grid.getCrossAt(position);
         if (startCrossColor == CrossState.EMPTY) {
             return false;
@@ -44,7 +44,7 @@ public class WinChecker {
     }
 
     public boolean isWinningMove(int row, int column) {
-        return isWinningMove(new Grid.Position(row, column));
+        return isWinningMove(new Position(row, column));
     }
 
 }

@@ -1,7 +1,7 @@
 //valutare se cambiare nome in quanto non "conforme" alla programmazione a oggetti
 public interface GameAPI {
     // Comandi (Input)
-    MoveResult makeMove(Grid.Position position);
+    MoveResult makeMove(Position position);
 
     // Query (Output / Stato)
     //possibile leak di incapsulamento, valutare correzione
