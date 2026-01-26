@@ -13,23 +13,5 @@ public class ConsoleUI {
     }
 
 
-    public void play(Game game){}
-
-    //Metodo tipico solo per capire funzionamento
-    public void prova(){
-        Game game = new Game();
-        while(game.getState() == GameState.IN_PROGRESS) {
-            Grid.Position p = askPosition();
-            MoveResult result = game.makeMove(p);
-
-            if(!result.isValid()) {
-                System.out.println(result.reason());
-            }
-        }
-    }
-
-    //Metodo di prova
-    private Grid.Position askPosition() {
-        return null;
-    }
+    public void play(GameAPI game){}
 }

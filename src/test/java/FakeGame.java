@@ -1,50 +1,151 @@
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.List;
+
 public class FakeGame implements GameAPI {
 
+
+    // -------------------------
+    // Stato "query" che la UI legge
+    // -------------------------
     // Campi fake per configurare il comportamento (Stub)
-    private GameState stateToReturn = GameState.IN_PROGRESS;
-    private Player playerToReturn = Player.BLACK;
-    private MoveResult moveResultToReturn = MoveResult.VALID_MOVE;
-    private Grid gridToReturn = new Grid();
+    private GameState state = GameState.IN_PROGRESS;
+    private Player currentPlayer = Player.BLACK;
+    private Grid grid = new Grid();
 
-    // Campi per verificare che la UI abbia chiamato i metodi giusti (Spy)
-    public Grid.Position lastMovePositionReceived;
-    public int makeMoveCallCount = 0;
 
+    // --- Script for makeMove results (Stub behaviour) --
+    private final Deque<MoveResult> scriptedMoveResults = new ArrayDeque<>();
+
+
+    // -------------------------
+    // Stateful: cambio stato dopo N mosse
+    // -------------------------
+    private int changeStateAfterMoves = -1; // -1 = disabilitato
+    private GameState stateAfterChange = null;
+
+
+    // -------------------------
+    // Spy: dati registrati
+    // -------------------------
+    private int makeMoveCallCount = 0;
+    private final List<Grid.Position> receivedPositions = new ArrayList<>();
+
+
+    // =========================================================
     // Implementazione GameAPI
+    // =========================================================
+
+
     @Override
     public MoveResult makeMove(Grid.Position position) {
-        this.makeMoveCallCount++;
-        this.lastMovePositionReceived = position;
+        makeMoveCallCount++;
+        receivedPositions.add(position);
 
-        // Simula un cambio di stato o ritorna il risultato programmato
-        return moveResultToReturn;
+        // Se configurato, cambia lo stato dopo N chiamate (utile per far terminare un loop UI)
+        //controlliamo sia impostato ad un valore valido(non -1) e nel caso facciamo il confronto
+        if (changeStateAfterMoves >= 0 && makeMoveCallCount >= changeStateAfterMoves) {
+            if (stateAfterChange != null) {
+                state = stateAfterChange;
+            }
+        }
+
+        // Ritorna il prossimo risultato scriptato, altrimenti un default sensato
+        if (!scriptedMoveResults.isEmpty()) {
+            return scriptedMoveResults.removeFirst();
+        }
+        return MoveResult.VALID_MOVE;
     }
 
     @Override
     public GameState getState() {
-        return stateToReturn;
+        return state;
     }
 
     @Override
     public Player getCurrentPlayer() {
-        return playerToReturn;
+        return currentPlayer;
     }
 
     @Override
     public Grid getGrid() {
-        return gridToReturn;
+        return grid;
     }
 
-    // Metodi setter per i Test
-    public void setNextMoveResult(MoveResult result) {
-        this.moveResultToReturn = result;
+
+
+    // =========================================================
+    // Metodi di configurazione (fluent) usati dai test
+    // =========================================================
+
+    /** Imposta lo stato ritornato da getState(). */
+    public FakeGame withState(GameState state) {
+        this.state = state;
+        return this;
     }
 
-    public void setState(GameState state) {
-        this.stateToReturn = state;
+    /** Imposta il player ritornato da getCurrentPlayer(). */
+    public FakeGame withCurrentPlayer(Player player) {
+        this.currentPlayer = player;
+        return this;
     }
 
-    public void setGrid(Grid grid) {
-        this.gridToReturn = grid;
+    /** Imposta la griglia ritornata da getGrid(). */
+    public FakeGame withGrid(Grid grid) {
+        this.grid = grid;
+        return this;
     }
+
+
+    /*
+    Script dei risultati che makeMove() ritornerà in sequenza.
+    Esempio: withScriptedMoveResults(INVALID_MOVE, VALID_MOVE)
+    */
+    public FakeGame withScriptedMoveResults(MoveResult... results) {
+        scriptedMoveResults.clear();
+        for (MoveResult r : results) {
+            scriptedMoveResults.addLast(r);
+        }
+        return this;
+    }
+
+    /**
+     * Dopo 'moves' chiamate a makeMove(), imposta lo stato a 'newState'.
+     * Utile per simulare la fine del gioco e interrompere la UI.
+     */
+    public FakeGame endGameAfterMoves(int moves, GameState newState) {
+        this.changeStateAfterMoves = moves;
+        this.stateAfterChange = newState;
+        return this;
+    }
+
+    //non so se effettivamente serve
+    /** (Opzionale) Resetta solo i dati spy (contatori e posizioni). */
+    public FakeGame resetSpy() {
+        this.makeMoveCallCount = 0;
+        this.receivedPositions.clear();
+        return this;
+    }
+
+
+    // =========================================================
+    // Getter spy (per assert nei test)
+    // =========================================================
+
+    public int getMakeMoveCallCount() {
+        return makeMoveCallCount;
+    }
+
+    /** Ritorna una copia delle posizioni ricevute, in ordine. */
+    public List<Grid.Position> getReceivedPositions() {
+        return new ArrayList<>(receivedPositions);
+    }
+
+    /** Ultima posizione ricevuta, o null se nessuna. */
+    public Grid.Position getLastReceivedPosition() {
+        if (receivedPositions.isEmpty()) return null;
+        return receivedPositions.getLast();
+    }
+
 }
