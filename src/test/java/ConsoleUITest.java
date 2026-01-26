@@ -40,11 +40,19 @@ public class ConsoleUITest {
     }
 
 
-    @Test
-    void readPosition_whenInputDoesNotMatchRegex_printsErrorAndRetries() {
+    @ParameterizedTest
+    @CsvSource({
+            "'a4\n10 20',                             10,20",
+            "'5t - 43\n10 20',                        10,20",
+            "'ciao 9999999999999999999\n3 4',         3,4",
+            "'9999999999999999999 mondo\n7 8',        7,8",
+            "'ciao mondo\n3 4',                       3,4",
+            "';\n7 8',                                7,8"
+
+    })
+    void readPosition_whenInputDoesNotMatchRegex_printsErrorAndRetries(String input, int row, int col) {
         // Arrange: prima riga invalida, poi riga valida (così il metodo termina)
-        String userInput = "ciao mondo\n10 20\n";
-        Scanner in = new Scanner(new ByteArrayInputStream(userInput.getBytes(StandardCharsets.UTF_8)));
+        Scanner in = new Scanner(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
 
         ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
         PrintStream out = new PrintStream(outBuffer, true, StandardCharsets.UTF_8);
@@ -55,7 +63,7 @@ public class ConsoleUITest {
         Position p = ui.readPosition("Inserisci mossa: ");
 
         // Assert sul valore ritornato
-        assertEquals(new Position(10, 20), p);
+        assertEquals(new Position(row, col), p);
 
         // Assert sull'output stampato
         String printed = outBuffer.toString(StandardCharsets.UTF_8);
@@ -69,11 +77,16 @@ public class ConsoleUITest {
                 "Mi aspetto che il prompt venga mostrato almeno due volte. Output:\n" + printed);
     }
 
-    @Test
-    void readPosition_whenNumberTooLarge_printsRangeErrorAndRetries() {
+    @ParameterizedTest
+    @CsvSource({
+            "'9999999999999999999 1\n10 20',                         10,20",
+            "'3 9999999999999999999\n10 20',                         10,20",
+            "'9999999999999999999  9999999999999999999\n3 4',         3,4",
+            "'77777777777777777777 77777777777777777777\n7 8',        7,8"
+    })
+    void readPosition_whenNumberTooLarge_printsRangeErrorAndRetries(String userInput, int row, int col) {
         // Arrange: numero fuori range per int, poi riga valida
         // 9999999999999999999 non entra in int -> Integer.parseInt lancia NumberFormatException
-        String userInput = "9999999999999999999 20\n10 20\n";
         Scanner in = new Scanner(new ByteArrayInputStream(userInput.getBytes(StandardCharsets.UTF_8)));
 
         ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
@@ -85,7 +98,7 @@ public class ConsoleUITest {
         Position p = ui.readPosition("Inserisci mossa: ");
 
         // Assert sul valore ritornato
-        assertEquals(new Position(10, 20), p);
+        assertEquals(new Position(row, col), p);
 
         // Assert sull'output stampato
         String printed = outBuffer.toString(StandardCharsets.UTF_8);
