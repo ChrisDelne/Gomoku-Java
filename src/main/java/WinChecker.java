@@ -49,6 +49,7 @@ public class WinChecker {
         return isWinningMove(new Position(row, column));
     }
 
+    //Aggiunge la posizione di partenza e poi scorre in entrambe le direzioni della linea
     private List<Position> collectLine(Position start, Direction dir, CrossState color) {
 
         List<Position> result = new ArrayList<>();
@@ -57,7 +58,7 @@ public class WinChecker {
         int dr = dir.deltaRow();
         int dc = dir.deltaColumn();
 
-        // avanti
+        // avanti per la stessa direzione
         int r = start.row() + dr;
         int c = start.col() + dc;
         while (grid.contains(r, c) && grid.getStateAt(r, c) == color) {
@@ -66,7 +67,7 @@ public class WinChecker {
             c += dc;
         }
 
-        // indietro
+        // indietro per la stessa direzione
         r = start.row() - dr;
         c = start.col() - dc;
         while (grid.contains(r, c) && grid.getStateAt(r, c) == color) {
@@ -79,13 +80,13 @@ public class WinChecker {
     }
 
 
-    public List<Position> getWinningLine(Position position) {
+    public List<Position> getWinningLine(Position position) { //Se mossa vincente, torna (calcola) a Game quali posizioni
         CrossState color = grid.getStateAt(position);
         if (color == CrossState.EMPTY)
             return List.of();
 
-        for (Direction direction : Direction.values()) {
-            List<Position> line = collectLine(position, direction, color);
+        for (Direction direction : Direction.values()) { // per tutte le direzioni
+            List<Position> line = collectLine(position, direction, color); // controlla avanti-indietro
             if (line.size() >= WIN_LENGTH)
                 return line;
         }

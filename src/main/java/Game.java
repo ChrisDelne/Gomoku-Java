@@ -8,7 +8,7 @@ public class Game implements TurnBasedGame {
     private final MoveService moveService;
     private final DrawChecker drawChecker;
     private final WinChecker winChecker;
-    private List<Position> winningLine = List.of();
+    private List<Position> winningLine = List.of(); // Lista posizioni vincenti vuota se nessuno ha vinto
 
 
 
@@ -52,8 +52,8 @@ public class Game implements TurnBasedGame {
 
     private void advanceGameAfterValidMove(Position position) {
         List<Position> line = winChecker.getWinningLine(position);
-        if (!line.isEmpty()) { // vittoria
-            winningLine = line;
+        if (!line.isEmpty()) { // vittoria se la lista delle posizioni vincenti non è vuota
+            winningLine = line; // game sa ora quali sono le posizioni vincenti (date alla UI con getter)
             state = (currentPlayer == Player.BLACK) ? GameState.BLACK_WON : GameState.WHITE_WON;
             return;
         }
