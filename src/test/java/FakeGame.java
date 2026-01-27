@@ -74,6 +74,11 @@ public class FakeGame implements TurnBasedGame {
         return grid;
     }
 
+    @Override
+    public List<Position> getDecisivePositions() {
+        return new ArrayList<>();
+    }
+
 
 
     // =========================================================

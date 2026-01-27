@@ -1,3 +1,5 @@
+import java.util.Collection;
+
 //valutare se cambiare nome in quanto non "conforme" alla programmazione a oggetti
 public interface TurnBasedGame {
     // Comandi (Input)
@@ -9,4 +11,6 @@ public interface TurnBasedGame {
     GameState getState();
     Player getCurrentPlayer();
     Grid getGrid();
+
+    Collection<Position> getDecisivePositions();
 }

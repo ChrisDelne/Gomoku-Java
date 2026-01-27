@@ -1,3 +1,5 @@
+import java.util.List;
+
 public class Game implements TurnBasedGame {
 
     private final Grid grid;
@@ -6,6 +8,7 @@ public class Game implements TurnBasedGame {
     private final MoveService moveService;
     private final DrawChecker drawChecker;
     private final WinChecker winChecker;
+    private List<Position> winningLine = List.of();
 
 
 
@@ -32,6 +35,8 @@ public class Game implements TurnBasedGame {
         return grid;
     }
 
+    public List<Position> getDecisivePositions() { return winningLine; }
+
     @Override
     public MoveResult makeMove(Position position) {
         if (state != GameState.IN_PROGRESS)
@@ -46,10 +51,17 @@ public class Game implements TurnBasedGame {
 
 
     private void advanceGameAfterValidMove(Position position) {
-        if (winChecker.isWinningMove(position)) { // vittoria
+        List<Position> line = winChecker.getWinningLine(position);
+        if (!line.isEmpty()) { // vittoria
+            winningLine = line;
             state = (currentPlayer == Player.BLACK) ? GameState.BLACK_WON : GameState.WHITE_WON;
             return;
         }
+
+        /*if (winChecker.isWinningMove(position)) { // vittoria
+            state = (currentPlayer == Player.BLACK) ? GameState.BLACK_WON : GameState.WHITE_WON;
+            return;
+        }*/
 
         if (drawChecker.isDraw()) { // pareggio
             state = GameState.DRAW;

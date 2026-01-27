@@ -1,5 +1,7 @@
 import java.io.PrintStream;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -11,8 +13,7 @@ public class ConsoleUI {
     // Accetta: "12 34", "12,34", "  -5   10  " ecc. (spazi e/o virgola come separatore)
     private static final Pattern TWO_INTS = Pattern.compile("^\\s*([+-]?\\d+)\\s*[ ,;]+\\s*([+-]?\\d+)\\s*$");
 
-    //--------------> Idea futura: evidenziare ultima mossa (necessario però tenerne traccia)
-    //--------------> TO DO: visualizzazione turno, giocatore giocante
+    //--------------> Idee future: mostrare contatore turni, assegnare colore custom ai giocatori
     private static final boolean USE_COLORS = true; //Interruttore globale dei colori
 
     //private static final String BLACK = "\u001B[30m";
@@ -26,6 +27,11 @@ public class ConsoleUI {
 
     private static final String BRIGHT_WHITE = "\u001B[97m";
     //private static final String BRIGHT_BLACK = "\u001B[90m";
+
+    private static final String BG_YELLOW = "\u001B[43m";
+    private static final String RESET  = "\u001B[0m";
+
+    private Set<Position> winningPositions = Set.of();
 
     public ConsoleUI(Scanner in, PrintStream out) {
         this.in = in;
@@ -86,17 +92,18 @@ public class ConsoleUI {
                     if (!moveResult.isValid()) {
                         out.println("> " + moveResult.getReason());
                     } else if(gameState != GameState.IN_PROGRESS && gameState != GameState.DRAW) {
+                        winningPositions = new HashSet<>(game.getDecisivePositions());
+                        clearScreenAndCursorToHome();
+                        printGrid(game.getGrid());
                         out.println("Il gioco è terminato, vince: "
                                 + colored(currentPlayer == Player.BLACK ? RED : GREEN, gameState == GameState.BLACK_WON ? "NERO" : "BIANCO")
                                 + "!");
                     } else if(gameState == GameState.DRAW) {
+                        clearScreenAndCursorToHome();
+                        printGrid(game.getGrid());
                         out.println("Il gioco è terminato: PARITÀ!");
                     }
                 } while (!moveResult.isValid());
-                /*MoveResult moveResult = game.makeMove(readPosition("scrivi una posizione valida sulla griglia: "));
-                while (!moveResult.isValid()) {
-                    moveResult = game.makeMove(readPosition("> " + moveResult.getReason() + "\nscrivi una nuova posizione valida sulla griglia: "));
-                }*/
             } catch (IllegalStateException eof) {
                 out.println("\nInput terminato. Uscita dalla partita.");
                 return; //esce
@@ -111,15 +118,24 @@ public class ConsoleUI {
     }
 
     private String colored(String color, String text) {
-        return USE_COLORS ? color + text + "\u001B[0m" : text;
+        return USE_COLORS ? color + text + RESET : text;
     }
 
-    private String symbol(CrossState state) {
-        return switch (state) {
-            case EMPTY -> colored(BRIGHT_WHITE, "\u00B7"); // punto centrale
-            case BLACK -> colored(RED, "\u25CF"); // cerchio pieno
-            case WHITE -> colored(GREEN, "\u25CB"); // cerchio vuoto
+    private String highlight(String text) {
+        return USE_COLORS ? BG_YELLOW + text + RESET : text;
+    }
+
+    private String symbol(Position p, CrossState state) {
+        String base = switch (state) {
+            case EMPTY -> colored(BRIGHT_WHITE, "\u00B7"); // ·
+            case BLACK -> colored(RED, "\u25CF"); // ●
+            case WHITE -> colored(GREEN, "\u25CB"); // ○
         };
+
+        if (winningPositions.contains(p))
+            return highlight(base);
+
+        return base;
     }
 
 
@@ -127,11 +143,11 @@ public class ConsoleUI {
         final int rows = g.getROWS();
         final int cols = g.getCOLUMNS();
 
+        out.println("===================== GOMOKU =====================\n");
+        out.println("Player1: " + colored(RED, "NERO") + "\t\tvs\t" + "   Player2: " + colored(GREEN, "BIANCO") + "\n");
+
         // Ogni cella è "<simbolo><spazio>" tranne l'ultima senza spazio -> larghezza contenuto = 2*cols - 1
         final int contentWidth = 2 * cols - 1;
-
-        /*out.print("================== GOMOKU =================\n");
-        out.print("Player1: " + colored(RED, "NERO") + "\t");*/
 
         // Header colonne (allineato all'inizio delle celle)
         out.print("     ");
@@ -158,7 +174,7 @@ public class ConsoleUI {
             out.print(' ');
 
             for (int c = 0; c < cols; c++) {
-                out.print(symbol(g.getStateAt(r, c)) + " ");
+                out.print(symbol(new Position(r,c), g.getStateAt(r,c)) + " ");
                 if (c != cols - 1) out.print(' ');
             }
 

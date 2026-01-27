@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class WinChecker {
 
     private final Grid grid;
@@ -45,5 +48,50 @@ public class WinChecker {
     public boolean isWinningMove(int row, int column) {
         return isWinningMove(new Position(row, column));
     }
+
+    private List<Position> collectLine(Position start, Direction dir, CrossState color) {
+
+        List<Position> result = new ArrayList<>();
+        result.add(start);
+
+        int dr = dir.deltaRow();
+        int dc = dir.deltaColumn();
+
+        // avanti
+        int r = start.row() + dr;
+        int c = start.col() + dc;
+        while (grid.contains(r, c) && grid.getStateAt(r, c) == color) {
+            result.add(new Position(r, c));
+            r += dr;
+            c += dc;
+        }
+
+        // indietro
+        r = start.row() - dr;
+        c = start.col() - dc;
+        while (grid.contains(r, c) && grid.getStateAt(r, c) == color) {
+            result.add(new Position(r, c));
+            r -= dr;
+            c -= dc;
+        }
+
+        return result;
+    }
+
+
+    public List<Position> getWinningLine(Position position) {
+        CrossState color = grid.getStateAt(position);
+        if (color == CrossState.EMPTY)
+            return List.of();
+
+        for (Direction direction : Direction.values()) {
+            List<Position> line = collectLine(position, direction, color);
+            if (line.size() >= WIN_LENGTH)
+                return line;
+        }
+
+        return List.of();
+    }
+
 
 }
