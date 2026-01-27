@@ -1,5 +1,6 @@
 plugins {
     id("java")
+    application
 }
 
 group = "it.units.gomoku"
@@ -17,6 +18,14 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+application {
+    mainClass.set("Main")
+}
+
+tasks.named<JavaExec>("run") {
+    standardInput = System.`in`
 }
 
 java {
