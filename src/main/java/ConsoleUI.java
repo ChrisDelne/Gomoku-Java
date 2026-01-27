@@ -12,7 +12,7 @@ public class ConsoleUI {
     private static final Pattern TWO_INTS = Pattern.compile("^\\s*([+-]?\\d+)\\s*[ ,;]+\\s*([+-]?\\d+)\\s*$");
 
     //--------------> Idea futura: evidenziare ultima mossa (necessario però tenerne traccia)
-    //--------------> TO DO: visualizzazione turno, giocatore giocante e messaggio vittoria/pareggio/mossa illecita (es: MoveResult.getReason())
+    //--------------> TO DO: visualizzazione turno, giocatore giocante
     private static final boolean USE_COLORS = true; //Interruttore globale dei colori
 
     //private static final String BLACK = "\u001B[30m";
@@ -31,7 +31,6 @@ public class ConsoleUI {
         this.in = in;
         this.out = out;
     }
-
 
 
     //forse creare package per renderlo accessibile solo alla classe ed ai test che lo usano
@@ -57,30 +56,48 @@ public class ConsoleUI {
                     return new Position(x, y);
                 } catch (NumberFormatException ex) {
                     // caso: numero enorme fuori range di int
-                    out.println("Valore fuori range per int. Riprova.");
+                    out.println("> Valore fuori range per int. Riprova.");
                 }
             } else {
-                out.println("Input non valido: inserisci SOLO due numeri interi (es. \"3 4\").");
+                out.println("> Input non valido: inserisci SOLO due numeri interi (es. \"3 4\").");
             }
         }
     }
 
 
-
     //gestire exception EOF
     //gestire numeri griglia != indici griglia
 
-    public void use(TurnBasedGame game){
+    public void use(TurnBasedGame game) {
         while (game.getState() == GameState.IN_PROGRESS) {
-            clearScreen();
+            clearScreenAndCursorToHome();
             printGrid(game.getGrid());
 
             try {
-                MoveResult moveResult = game.makeMove(readPosition("scrivi una posizione valida sulla griglia: "));
+                MoveResult moveResult;
+                Player currentPlayer = game.getCurrentPlayer();
+                do {
+                    Position pos = readPosition("Giocatore "
+                            + colored(currentPlayer == Player.BLACK ? RED : GREEN, currentPlayer == Player.BLACK ? "NERO" : "BIANCO")
+                            + " scrivi una posizione valida sulla griglia: ");
+                    moveResult = game.makeMove(pos);
+
+                    GameState gameState = game.getState();
+                    if (!moveResult.isValid()) {
+                        out.println("> " + moveResult.getReason());
+                    } else if(gameState != GameState.IN_PROGRESS && gameState != GameState.DRAW) {
+                        out.println("Il gioco è terminato, vince: "
+                                + colored(currentPlayer == Player.BLACK ? RED : GREEN, gameState == GameState.BLACK_WON ? "NERO" : "BIANCO")
+                                + "!");
+                    } else if(gameState == GameState.DRAW) {
+                        out.println("Il gioco è terminato: PARITÀ!");
+                    }
+                } while (!moveResult.isValid());
+                /*MoveResult moveResult = game.makeMove(readPosition("scrivi una posizione valida sulla griglia: "));
                 while (!moveResult.isValid()) {
-                    moveResult = game.makeMove(readPosition("scrivi una nuova posizione valida sulla griglia: "));
-                }
-            }catch (IllegalStateException eof){
+                    moveResult = game.makeMove(readPosition("> " + moveResult.getReason() + "\nscrivi una nuova posizione valida sulla griglia: "));
+                }*/
+            } catch (IllegalStateException eof) {
                 out.println("\nInput terminato. Uscita dalla partita.");
                 return; //esce
             }
@@ -88,8 +105,7 @@ public class ConsoleUI {
         }
     }
 
-    private void clearScreen() {
-        // ANSI: clear entire screen + cursor to home
+    private void clearScreenAndCursorToHome() {
         out.print("\u001B[H\u001B[2J");
         out.flush();
     }
@@ -111,23 +127,25 @@ public class ConsoleUI {
         final int rows = g.getROWS();
         final int cols = g.getCOLUMNS();
 
-        // Ogni cella è stampata come: "<simbolo><spazio>", tranne l'ultima senza spazio finale.
-        // Quindi larghezza contenuto = 2*cols - 1
+        // Ogni cella è "<simbolo><spazio>" tranne l'ultima senza spazio -> larghezza contenuto = 2*cols - 1
         final int contentWidth = 2 * cols - 1;
 
+        /*out.print("================== GOMOKU =================\n");
+        out.print("Player1: " + colored(RED, "NERO") + "\t");*/
+
         // Header colonne (allineato all'inizio delle celle)
-        out.print("     "); // 5 spazi: allinea con "rr │ " (2 + 1 + 1 + 1)
+        out.print("     ");
         for (int c = 0; c < cols; c++) {
-            if (c < 10)out.print(c + " "); // 0..9: una cifra
-            else out.print(c);                    // 10..14: due cifre (qui va gestito lo spazio sotto)
+            if (c < 10) out.print(c + " ");
+            else out.print(c);
             if (c != cols - 1) out.print(' ');
         }
         out.println();
 
         // Bordo superiore
-        out.print("   "); // 3 spazi (allinea sotto il header)
+        out.print("   ");
         out.print('┌');
-        for (int i = 0; i < contentWidth + 16; i++) out.print('─'); // +2 per gli spazi interni "│ <cells> │"
+        for (int i = 0; i < contentWidth + 16; i++) out.print('─');
         out.print('┐');
         out.println();
 

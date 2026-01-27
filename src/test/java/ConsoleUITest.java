@@ -229,17 +229,18 @@ public class ConsoleUITest {
 
         ConsoleUI consoleUI = new ConsoleUI(in, out);
 
-
-
-
         // Act
         consoleUI.use(game);
 
         // Assert sull'output stampato
         String printed = outBuffer.toString(StandardCharsets.UTF_8);
 
-        assertEquals(countOccurrences(printed, "una nuova posizione"),2,
-                "Mi aspetto che il prompt di rihciesta nuova venga mostrato due volte. Output:\n" + printed);
+        assertEquals(2, //Non verifica più che stampi la frase ma che si verifichino due errori
+                countOccurrences(printed, result.getReason()),
+                "Mi aspetto che l'errore venga mostrato due volte. Output:\n" + printed
+        );
+        /*assertEquals(2, countOccurrences(printed, "una nuova posizione"),
+                "Mi aspetto che il prompt di rihciesta nuova venga mostrato due volte. Output:\n" + printed);*/
 
     }
 
