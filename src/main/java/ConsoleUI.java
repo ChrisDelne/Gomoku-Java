@@ -80,10 +80,7 @@ public class ConsoleUI {
         try {
             while (game.getState() == GameState.IN_PROGRESS) {
                 render(game);
-
-                //rimuovere playerToMove e farlo prendere da game direttamente dentro il metodo
-                Player playerToMove = game.getCurrentPlayer();
-                handleMove(game, playerToMove);
+                handleMove(game);
 
                 // Dopo una mossa valida, controlla se la partita è finita
                 if (game.getState() != GameState.IN_PROGRESS) {
@@ -227,8 +224,9 @@ public class ConsoleUI {
         printGrid(game.getGrid());
     }
 
-    private void handleMove(TurnBasedGame game, Player playerToMove) {
+    private void handleMove(TurnBasedGame game) {
         while (true) {
+            Player playerToMove = game.getCurrentPlayer();
             Position pos = readPosition("Giocatore "
                     + colored(playerToMove == Player.BLACK ? RED : GREEN,
                     playerToMove == Player.BLACK ? "NERO" : "BIANCO")
