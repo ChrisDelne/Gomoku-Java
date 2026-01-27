@@ -37,6 +37,7 @@ public class Game implements TurnBasedGame {
 
     public List<Position> getDecisivePositions() { return winningLine; }
 
+    //rimuovere eccezione
     @Override
     public MoveResult makeMove(Position position) {
         if (state != GameState.IN_PROGRESS)

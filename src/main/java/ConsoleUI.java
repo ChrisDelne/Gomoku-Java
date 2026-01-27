@@ -74,42 +74,26 @@ public class ConsoleUI {
 
     //gestire exception EOF
     //gestire numeri griglia != indici griglia
-
     public void use(TurnBasedGame game) {
-        while (game.getState() == GameState.IN_PROGRESS) {
-            clearScreenAndCursorToHome();
-            printGrid(game.getGrid());
+        winningPositions = Set.of(); // reset highlight all’inizio
 
-            try {
-                MoveResult moveResult;
-                Player currentPlayer = game.getCurrentPlayer();
-                do {
-                    Position pos = readPosition("Giocatore "
-                            + colored(currentPlayer == Player.BLACK ? RED : GREEN, currentPlayer == Player.BLACK ? "NERO" : "BIANCO")
-                            + " scrivi una posizione valida sulla griglia: ");
-                    moveResult = game.makeMove(pos);
+        try {
+            while (game.getState() == GameState.IN_PROGRESS) {
+                render(game);
 
-                    GameState gameState = game.getState();
-                    if (!moveResult.isValid()) {
-                        out.println("> " + moveResult.getReason());
-                    } else if(gameState != GameState.IN_PROGRESS && gameState != GameState.DRAW) {
-                        winningPositions = new HashSet<>(game.getDecisivePositions());
-                        clearScreenAndCursorToHome();
-                        printGrid(game.getGrid());
-                        out.println("Il gioco è terminato, vince: "
-                                + colored(currentPlayer == Player.BLACK ? RED : GREEN, gameState == GameState.BLACK_WON ? "NERO" : "BIANCO")
-                                + "!");
-                    } else if(gameState == GameState.DRAW) {
-                        clearScreenAndCursorToHome();
-                        printGrid(game.getGrid());
-                        out.println("Il gioco è terminato: PARITÀ!");
-                    }
-                } while (!moveResult.isValid());
-            } catch (IllegalStateException eof) {
-                out.println("\nInput terminato. Uscita dalla partita.");
-                return; //esce
+                Player playerToMove = game.getCurrentPlayer();
+                handleMove(game, playerToMove);
+
+                // Dopo una mossa valida, controlla se la partita è finita
+                if (game.getState() != GameState.IN_PROGRESS) {
+                    winningPositions = new HashSet<>(game.getDecisivePositions());
+                    render(game); // ristampa la griglia finale
+                    showEndMessage(game);
+                    return;
+                }
             }
-
+        } catch (IllegalStateException eof) {
+            out.println("\nInput terminato. Uscita dalla partita.");
         }
     }
 
@@ -126,6 +110,7 @@ public class ConsoleUI {
         return BG_YELLOW + text + RESET;
     }
 
+    //qui viene messo 2 volte  reset in caso di hilights, una in colored e una in highlight
     private String symbol(Position p, CrossState state) {
         String base = switch (state) {
             case EMPTY -> colored(BRIGHT_WHITE, "\u00B7"); // ·
@@ -229,5 +214,46 @@ public class ConsoleUI {
         //math.max per evitare valori negativi
         return String.valueOf(ch).repeat(Math.max(0, count));
     }
+
+    private void render(TurnBasedGame game) {
+        clearScreenAndCursorToHome();
+        printGrid(game.getGrid());
+    }
+
+    private void handleMove(TurnBasedGame game, Player playerToMove) {
+        while (true) {
+            Position pos = readPosition("Giocatore "
+                    + colored(playerToMove == Player.BLACK ? RED : GREEN,
+                    playerToMove == Player.BLACK ? "NERO" : "BIANCO")
+                    + " scrivi una posizione valida sulla griglia: ");
+
+            MoveResult moveResult = game.makeMove(pos);
+
+            if (moveResult.isValid()) {
+                return;
+            }
+
+            out.println("> " + moveResult.getReason());
+        }
+    }
+
+    private void showEndMessage(TurnBasedGame game) {
+        GameState state = game.getState();
+
+        if (state == GameState.DRAW) {
+            out.println("Il gioco è terminato: PARITÀ!");
+            return;
+        }
+
+        // Se non è IN_PROGRESS e non è DRAW, allora qualcuno ha vinto
+        //winningPositions = new HashSet<>(game.getDecisivePositions());
+
+        Player winner = (state == GameState.BLACK_WON) ? Player.BLACK : Player.WHITE;
+        String winnerName = (winner == Player.BLACK) ? "NERO" : "BIANCO";
+        String winnerColor = (winner == Player.BLACK) ? RED : GREEN;
+
+        out.println("Il gioco è terminato, vince: " + colored(winnerColor, winnerName) + "!");
+    }
+
 
 }
