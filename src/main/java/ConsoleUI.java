@@ -46,7 +46,7 @@ public class ConsoleUI {
             out.print(prompt);         // 2) mostra il messaggio all'utente
 
             if (!in.hasNextLine()) {   // 3) se non esiste un'altra riga (EOF, input chiuso)
-                throw new IllegalStateException("Input terminato.");
+                throw new InputTerminatedException("Input terminato.");
             }
 
             String line = in.nextLine();         // 4) leggi TUTTA la riga come stringa
@@ -81,6 +81,7 @@ public class ConsoleUI {
             while (game.getState() == GameState.IN_PROGRESS) {
                 render(game);
 
+                //rimuovere playerToMove e farlo prendere da game direttamente dentro il metodo
                 Player playerToMove = game.getCurrentPlayer();
                 handleMove(game, playerToMove);
 
@@ -92,10 +93,16 @@ public class ConsoleUI {
                     return;
                 }
             }
-        } catch (IllegalStateException eof) {
+            // creare un eccezione apposita per EOF perchè ora prende pure quella di handleMove
+        } catch (InputTerminatedException e) {
             out.println("\nInput terminato. Uscita dalla partita.");
+        } catch (IllegalStateException e) {
+            out.println("\nErrore interno: " + e.getMessage());
+            out.println("La partita verrà chiusa.");
         }
     }
+
+
 
     private void clearScreenAndCursorToHome() {
         out.print("\u001B[H\u001B[2J");

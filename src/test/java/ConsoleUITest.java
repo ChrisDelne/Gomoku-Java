@@ -138,7 +138,7 @@ public class ConsoleUITest {
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
         ConsoleUI ui = new ConsoleUI(in, out);
 
-        assertThrows(IllegalStateException.class, () -> ui.readPosition(""));
+        assertThrows(InputTerminatedException.class, () -> ui.readPosition(""));
     }
 
     //testare pure imput terminato
