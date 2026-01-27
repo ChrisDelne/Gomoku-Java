@@ -10,11 +10,12 @@ public class ConsoleUI {
     private final Scanner in;
     private final PrintStream out;
 
-    // Accetta: "12 34", "12,34", "  -5   10  " ecc. (spazi e/o virgola come separatore)
+    // Accetta: "12 34", "12,34", "  -5   10  " ecc. (spazi e/o virgola e/o punto e virgola come separatore)
     private static final Pattern TWO_INTS = Pattern.compile("^\\s*([+-]?\\d+)\\s*[ ,;]+\\s*([+-]?\\d+)\\s*$");
 
+
+
     //--------------> Idee future: mostrare contatore turni, assegnare colore custom ai giocatori
-    private static final boolean USE_COLORS = true; //Interruttore globale dei colori
 
     //private static final String BLACK = "\u001B[30m";
     private static final String RED = "\u001B[31m";
@@ -54,12 +55,12 @@ public class ConsoleUI {
             if (m.matches()) {         // 6) matches() = la riga intera rispetta la regex?
                 try {
                     // 7) se sì, prendi i due pezzi catturati (group(1) e group(2))
-                    int x = Integer.parseInt(m.group(1));
-                    int y = Integer.parseInt(m.group(2));
+                    int row = Integer.parseInt(m.group(1));
+                    int col = Integer.parseInt(m.group(2));
 
                     // 8) ritorna la coppia -> esci dal metodo
                     //-1 converte da numero vero ad indice
-                    return new Position(x, y);
+                    return new Position(row, col);
                 } catch (NumberFormatException ex) {
                     // caso: numero enorme fuori range di int
                     out.println("> Valore fuori range per int. Riprova.");
@@ -118,11 +119,11 @@ public class ConsoleUI {
     }
 
     private String colored(String color, String text) {
-        return USE_COLORS ? color + text + RESET : text;
+        return color + text + RESET;
     }
 
     private String highlight(String text) {
-        return USE_COLORS ? BG_YELLOW + text + RESET : text;
+        return BG_YELLOW + text + RESET;
     }
 
     private String symbol(Position p, CrossState state) {
@@ -146,48 +147,87 @@ public class ConsoleUI {
         out.println("===================== GOMOKU =====================\n");
         out.println("Player1: " + colored(RED, "NERO") + "\t\tvs\t" + "   Player2: " + colored(GREEN, "BIANCO") + "\n");
 
-        // Ogni cella è "<simbolo><spazio>" tranne l'ultima senza spazio -> larghezza contenuto = 2*cols - 1
-        final int contentWidth = 2 * cols - 1;
 
-        // Header colonne (allineato all'inizio delle celle)
-        out.print("     ");
+        //leavare meno uno se si passa a numerazione nomrale invece che index
+        final int rowDigits = digits(rows - 1);
+        final int colDigits = digits(cols - 1);
+
+        // Ogni colonna “prenota”: (max cifre) + 1 spazio di separazione
+        final int cellWidth = colDigits + 1;
+
+        // padding interno tra bordo e prima/ultima colonna
+        final int leftPad = 1;
+        final int rightPad = 1;
+
+        // Larghezza interna tra ┌ e ┐:
+        // leftPad +
+        // (cols simboli) +
+        // (cols-1) * (spazi tra colonne) +
+        // rightPad
+        // es. 1 + 15 + 14 * 2 + 1
+        //   spazio s. + numero puntini + spazio ai lati + spazio destra
+        final int innerWidth = leftPad + (cols - 1) * cellWidth + 1 + rightPad;
+
+        // Dove inizia la colonna 0 (cioè dove sta il primo simbolo)
+        // Riga: [rowDigits cifre] + ' ' + '│' + leftPad spazi  => simbolo
+        // numero cifre + 2 spazi(separatore + colonna) + spazi leftpad
+        final String headerIndent = repeat(' ', rowDigits + 2) + repeat(' ', leftPad);
+
+        // ---------- Header colonne: prima cifra sopra la colonna ----------
+        out.print(headerIndent);
         for (int c = 0; c < cols; c++) {
-            if (c < 10) out.print(c + " ");
-            else out.print(c);
-            if (c != cols - 1) out.print(' ');
+            String s = Integer.toString(c);                 // "0", "9", "10", ...
+            out.print(s);                                   // prima cifra va “a colonna”
+            out.print(repeat(' ', cellWidth - s.length())); // riempi fino alla prossima colonna
         }
         out.println();
 
-        // Bordo superiore
-        out.print("   ");
+        // ---------- Bordo superiore ----------
+        out.print(repeat(' ', rowDigits + 1));
         out.print('┌');
-        for (int i = 0; i < contentWidth + 16; i++) out.print('─');
+        out.print(repeat('─', innerWidth));
         out.print('┐');
         out.println();
 
-        // Righe
+        // ---------- Righe ----------
         for (int r = 0; r < rows; r++) {
-            // Etichetta riga (2 caratteri minimi per allineare 0..14)
-            out.printf("%2d ", r);
+            out.printf("%" + rowDigits + "d ", r);
 
             out.print('│');
-            out.print(' ');
+            out.print(repeat(' ', leftPad));
 
             for (int c = 0; c < cols; c++) {
-                out.print(symbol(new Position(r,c), g.getStateAt(r,c)) + " ");
-                if (c != cols - 1) out.print(' ');
+                out.print(symbol(new Position(r, c), g.getStateAt(r, c)));
+
+                // spazi SOLO tra colonne (non dopo l’ultima)
+                if (c < cols - 1) {
+                    out.print(repeat(' ', cellWidth - 1));
+                }
             }
 
+            // padding destro “giusto”: 1 spazio prima del bordo
+            out.print(repeat(' ', rightPad));
             out.print('│');
             out.println();
         }
 
-        // Bordo inferiore
-        out.print("   ");
+        // ---------- Bordo inferiore ----------
+        out.print(repeat(' ', rowDigits + 1));
         out.print('└');
-        for (int i = 0; i < contentWidth + 16; i++) out.print('─');
+        out.print(repeat('─', innerWidth));
         out.print('┘');
         out.println();
+    }
+
+
+    private static int digits(int n) {
+        // n >= 0
+        return String.valueOf(n).length();
+    }
+
+    private static String repeat(char ch, int count) {
+        //math.max per evitare valori negativi
+        return String.valueOf(ch).repeat(Math.max(0, count));
     }
 
 }
