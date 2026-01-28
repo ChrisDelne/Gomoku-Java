@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 public class Main {
-    static void main(String[] args) {
+    public static void main(String[] ignoredArgs) {
         ConsoleUI ui = new ConsoleUI(new Scanner(System.in), System.out);
 
 

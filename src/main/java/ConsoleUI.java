@@ -1,7 +1,6 @@
 import java.io.PrintStream;
 import java.util.HashSet;
 import java.util.Scanner;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,9 +14,6 @@ public class ConsoleUI {
     // Accetta: "12 34", "12,34", "  -5   10  " ecc. (spazi e/o virgola e/o punto e virgola come separatore)
     private static final Pattern TWO_INTS = Pattern.compile("^\\s*([+-]?\\d+)\\s*[ ,;]+\\s*([+-]?\\d+)\\s*$");
 
-    //valutare se spostare WinningPosition dentro il metodo Use e levarlo dalle variabili di classe
-    //lo si potrebbe anche passare direttamente dentro render con game.getDecisivePositions()
-    private Set<Position> winningPositions = Set.of();
 
     public ConsoleUI(Scanner in, PrintStream out) {
         this.in = in;
@@ -26,7 +22,7 @@ public class ConsoleUI {
     }
 
     private void render(TurnBasedGame game) {
-        consoleRenderer.render(game.getGrid(), winningPositions);
+        consoleRenderer.render(game.getGrid(), new HashSet<>(game.getDecisivePositions()));
     }
 
 
@@ -65,9 +61,6 @@ public class ConsoleUI {
     //gestire exception EOF
     //gestire numeri griglia != indici griglia
     public void use(TurnBasedGame game) {
-        //da eliminare?
-        winningPositions = Set.of(); // reset highlight all’inizio
-
         try {
             while (game.getState() == GameState.IN_PROGRESS) {
                 render(game);
@@ -75,7 +68,6 @@ public class ConsoleUI {
 
                 // Dopo una mossa valida, controlla se la partita è finita
                 if (game.getState() != GameState.IN_PROGRESS) {
-                    winningPositions = new HashSet<>(game.getDecisivePositions());
                     render(game); // ristampa la griglia finale
                     showEndMessage(game);
                     return;
