@@ -1,11 +1,9 @@
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.Console;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
@@ -75,8 +73,7 @@ public class ConsoleUITest {
                 "Mi aspetto un messaggio che segnali input non valido. Output:\n" + printed);
 
         // 2) (opzionale) ha mostrato il prompt almeno due volte (una per ogni tentativo)
-        assertTrue(countOccurrences(printed, "Inserisci mossa: ") == 2,
-                "Mi aspetto che il prompt venga mostrato due volte. Output:\n" + printed);
+        assertEquals(2, countOccurrences(printed, "Inserisci mossa: "), "Mi aspetto che il prompt venga mostrato due volte. Output:\n" + printed);
     }
 
     @ParameterizedTest
@@ -109,8 +106,7 @@ public class ConsoleUITest {
                 "Mi aspetto un messaggio che segnali overflow/fuori range. Output:\n" + printed);
 
         // (opzionale) prompt almeno due volte
-        assertTrue(countOccurrences(printed, "Inserisci mossa: ") == 2,
-                "Mi aspetto che il prompt venga mostrato due volte. Output:\n" + printed);
+        assertEquals(2, countOccurrences(printed, "Inserisci mossa: "), "Mi aspetto che il prompt venga mostrato due volte. Output:\n" + printed);
     }
 
     //scarta gli imput non validi
@@ -239,8 +235,6 @@ public class ConsoleUITest {
                 countOccurrences(printed, result.getReason()),
                 "Mi aspetto che l'errore venga mostrato due volte. Output:\n" + printed
         );
-        /*assertEquals(2, countOccurrences(printed, "una nuova posizione"),
-                "Mi aspetto che il prompt di rihciesta nuova venga mostrato due volte. Output:\n" + printed);*/
 
     }
 

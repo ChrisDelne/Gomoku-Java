@@ -5,16 +5,7 @@ public class ConsoleRenderer {
     //private static final String BLACK = "\u001B[30m";
     private static final String BLACK = "\u001B[31m";//red
     private static final String WHITE = "\u001B[34m";//blue
-    //private static final String RED = "\u001B[31m";
-    //private static final String YELLOW = "\u001B[33m";
-    //private static final String BLUE = "\u001B[34m";
-    //private static final String PURPLE = "\u001B[35m";
-    //private static final String CYAN = "\u001B[36m";
-    //private static final String WHITE = "\u001B[37m";
-    //private static final String BRIGHT_WHITE = "\u001B[97m";
     private static final String POINTS = "\u001B[97m";
-    //private static final String BRIGHT_BLACK = "\u001B[90m";
-    //private static final String BG_YELLOW = "\u001B[43m";
     private static final String HIGHLIGHTED_BACKGROUND = "\u001B[43m";
     private static final String RESET  = "\u001B[0m";
 
@@ -55,9 +46,9 @@ public class ConsoleRenderer {
 
     private String symbol(Position p, CrossState state, Set<Position> winningPositions) {
         String base = switch (state) {
-            case EMPTY -> colored(POINTS, "\u00B7"); // ·
-            case BLACK -> colored(BLACK, "\u25CB"); // ○
-            case WHITE -> colored(WHITE, "\u25CF"); //●
+            case EMPTY -> colored(POINTS, "·");
+            case BLACK -> colored(BLACK, "○");
+            case WHITE -> colored(WHITE, "●");
         };
 
         if (winningPositions.contains(p))
@@ -71,7 +62,6 @@ public class ConsoleRenderer {
         final int cols = g.getCOLUMNS();
 
         out.println("===================== GOMOKU =====================\n");
-        //out.println("Player1: " + colored(RED, "NERO") + "\t\tvs\t" + "   Player2: " + colored(GREEN, "BIANCO") + "\n");
         out.println("Player1: " + playerLabel(Player.BLACK) + "\t\tvs\t" + "   Player2: " + playerLabel(Player.WHITE)+ "\n");
 
 

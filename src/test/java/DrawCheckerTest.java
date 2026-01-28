@@ -3,8 +3,8 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DrawCheckerTest {
-    Grid grid = new Grid();
-    DrawChecker drawChecker = new DrawChecker(grid);
+    final Grid grid = new Grid();
+    final DrawChecker drawChecker = new DrawChecker(grid);
 
     @Test
     void isDraw_FullGrid() {

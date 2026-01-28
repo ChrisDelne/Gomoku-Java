@@ -63,11 +63,6 @@ public class Game implements TurnBasedGame {
             return;
         }
 
-        /*if (winChecker.isWinningMove(position)) { // vittoria
-            state = (currentPlayer == Player.BLACK) ? GameState.BLACK_WON : GameState.WHITE_WON;
-            return;
-        }*/
-
         if (drawChecker.isDraw()) { // pareggio
             state = GameState.DRAW;
             return;

@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class WinCheckerTest {
 
-    Grid grid = new Grid();
-    WinChecker winChecker = new WinChecker(grid);
+    final Grid grid = new Grid();
+    final WinChecker winChecker = new WinChecker(grid);
 
     @Test
     void getWinningLine_VerticalWin() {
