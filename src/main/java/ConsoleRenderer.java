@@ -3,16 +3,19 @@ import java.util.Set;
 
 public class ConsoleRenderer {
     //private static final String BLACK = "\u001B[30m";
-    private static final String RED = "\u001B[31m";
-    private static final String GREEN = "\u001B[32m";
+    private static final String BLACK = "\u001B[31m";//red
+    private static final String WHITE = "\u001B[34m";//blue
+    //private static final String RED = "\u001B[31m";
     //private static final String YELLOW = "\u001B[33m";
     //private static final String BLUE = "\u001B[34m";
     //private static final String PURPLE = "\u001B[35m";
     //private static final String CYAN = "\u001B[36m";
     //private static final String WHITE = "\u001B[37m";
-    private static final String BRIGHT_WHITE = "\u001B[97m";
+    //private static final String BRIGHT_WHITE = "\u001B[97m";
+    private static final String POINTS = "\u001B[97m";
     //private static final String BRIGHT_BLACK = "\u001B[90m";
-    private static final String BG_YELLOW = "\u001B[43m";
+    //private static final String BG_YELLOW = "\u001B[43m";
+    private static final String HIGHLIGHTED_BACKGROUND = "\u001B[43m";
     private static final String RESET  = "\u001B[0m";
 
     private final PrintStream out;
@@ -47,14 +50,14 @@ public class ConsoleRenderer {
     }
 
     private String highlight(String text) {
-        return BG_YELLOW + text + RESET;
+        return HIGHLIGHTED_BACKGROUND + text + RESET;
     }
 
     private String symbol(Position p, CrossState state, Set<Position> winningPositions) {
         String base = switch (state) {
-            case EMPTY -> colored(BRIGHT_WHITE, "\u00B7"); // ·
-            case BLACK -> colored(RED, "\u25CB"); // ○
-            case WHITE -> colored(GREEN, "\u25CF"); //●
+            case EMPTY -> colored(POINTS, "\u00B7"); // ·
+            case BLACK -> colored(BLACK, "\u25CB"); // ○
+            case WHITE -> colored(WHITE, "\u25CF"); //●
         };
 
         if (winningPositions.contains(p))
@@ -145,6 +148,6 @@ public class ConsoleRenderer {
 
     //da valutare
     public String playerLabel(Player p) {
-        return (p == Player.BLACK) ? colored(RED, "NERO") : colored(GREEN, "BIANCO");
+        return (p == Player.BLACK) ? colored(BLACK, "NERO") : colored(WHITE, "BIANCO");
     }
 }
