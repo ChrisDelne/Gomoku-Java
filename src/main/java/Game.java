@@ -31,9 +31,10 @@ public class Game implements TurnBasedGame {
         return currentPlayer;
     }
 
-    public Grid getGrid() {
+    public GridView getGrid() {
         return grid;
     }
+    //public GridView ciao() {return  grid;}
 
     public List<Position> getDecisivePositions() {
         //return winningLine;

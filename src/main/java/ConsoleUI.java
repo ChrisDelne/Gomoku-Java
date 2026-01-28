@@ -16,6 +16,7 @@ public class ConsoleUI {
     private static final Pattern TWO_INTS = Pattern.compile("^\\s*([+-]?\\d+)\\s*[ ,;]+\\s*([+-]?\\d+)\\s*$");
 
     //valutare se spostare WinningPosition dentro il metodo Use e levarlo dalle variabili di classe
+    //lo si potrebbe anche passare direttamente dentro render con game.getDecisivePositions()
     private Set<Position> winningPositions = Set.of();
 
     public ConsoleUI(Scanner in, PrintStream out) {

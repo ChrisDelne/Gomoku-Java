@@ -24,7 +24,7 @@ public class ConsoleRenderer {
         this.out = out;
     }
 
-    public void render(Grid g, Set<Position> winningPositions) {
+    public void render(GridView g, Set<Position> winningPositions) {
         clearScreenAndCursorToHome();
         printGrid(g, winningPositions);
     }
@@ -66,7 +66,7 @@ public class ConsoleRenderer {
         return base;
     }
 
-    private void printGrid(Grid g, Set<Position> winningPositions) {
+    private void printGrid(GridView g, Set<Position> winningPositions) {
         final int rows = g.getROWS();
         final int cols = g.getCOLUMNS();
 

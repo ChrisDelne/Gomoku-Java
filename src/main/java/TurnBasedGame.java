@@ -9,7 +9,7 @@ public interface TurnBasedGame {
     //valutare se restituire un recordo o comunque una copia
     GameState getState();
     Player getCurrentPlayer();
-    Grid getGrid();
+    GridView getGrid();
 
     Collection<Position> getDecisivePositions();
 }

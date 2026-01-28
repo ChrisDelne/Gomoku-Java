@@ -1,4 +1,4 @@
-public class Grid {
+public class Grid implements GridView {
 
     private final int ROWS = 15;
     private final int COLUMNS = 15;
