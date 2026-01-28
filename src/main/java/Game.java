@@ -43,7 +43,6 @@ public class Game implements TurnBasedGame {
     }
 
     //rimuovere eccezione
-    @Override
     public MoveResult makeMove(Position position) {
         if (state != GameState.IN_PROGRESS)
             throw new IllegalStateException("Game not in progress");
