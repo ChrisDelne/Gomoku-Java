@@ -1,6 +1,5 @@
 import java.util.Collection;
 
-//valutare se cambiare nome in quanto non "conforme" alla programmazione a oggetti
 public interface TurnBasedGame {
     // Comandi (Input)
     MoveResult makeMove(Position position);
