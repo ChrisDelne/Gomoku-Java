@@ -53,8 +53,8 @@ public class ConsoleRenderer {
     private String symbol(Position p, CrossState state, Set<Position> winningPositions) {
         String base = switch (state) {
             case EMPTY -> colored(BRIGHT_WHITE, "\u00B7"); // ·
-            case BLACK -> colored(RED, "\u25CF"); // ●
-            case WHITE -> colored(GREEN, "\u25CB"); // ○
+            case BLACK -> colored(RED, "\u25CB"); // ○
+            case WHITE -> colored(GREEN, "\u25CF"); //●
         };
 
         if (winningPositions.contains(p))
@@ -68,7 +68,8 @@ public class ConsoleRenderer {
         final int cols = g.getCOLUMNS();
 
         out.println("===================== GOMOKU =====================\n");
-        out.println("Player1: " + colored(RED, "NERO") + "\t\tvs\t" + "   Player2: " + colored(GREEN, "BIANCO") + "\n");
+        //out.println("Player1: " + colored(RED, "NERO") + "\t\tvs\t" + "   Player2: " + colored(GREEN, "BIANCO") + "\n");
+        out.println("Player1: " + playerLabel(Player.BLACK) + "\t\tvs\t" + "   Player2: " + playerLabel(Player.WHITE)+ "\n");
 
 
         //leavare meno uno se si passa a numerazione nomrale invece che index
@@ -143,7 +144,7 @@ public class ConsoleRenderer {
     }
 
     //da valutare
-    private String playerLabel(Player p) {
+    public String playerLabel(Player p) {
         return (p == Player.BLACK) ? colored(RED, "NERO") : colored(GREEN, "BIANCO");
     }
 }

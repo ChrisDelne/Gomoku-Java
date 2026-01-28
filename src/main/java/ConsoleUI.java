@@ -9,30 +9,11 @@ public class ConsoleUI {
 
     private final Scanner in;
     private final PrintStream out;
-    private final ConsoleRenderer renderer;
+    private final ConsoleRenderer consoleRenderer;
 
 
     // Accetta: "12 34", "12,34", "  -5   10  " ecc. (spazi e/o virgola e/o punto e virgola come separatore)
     private static final Pattern TWO_INTS = Pattern.compile("^\\s*([+-]?\\d+)\\s*[ ,;]+\\s*([+-]?\\d+)\\s*$");
-
-
-
-    //--------------> Idee future: mostrare contatore turni, assegnare colore custom ai giocatori
-
-    //passate, da eliminare
-    //private static final String BLACK = "\u001B[30m";
-    private static final String RED = "\u001B[31m";
-    private static final String GREEN = "\u001B[32m";
-    //private static final String YELLOW = "\u001B[33m";
-    //private static final String BLUE = "\u001B[34m";
-    //private static final String PURPLE = "\u001B[35m";
-    //private static final String CYAN = "\u001B[36m";
-    //private static final String WHITE = "\u001B[37m";
-    private static final String BRIGHT_WHITE = "\u001B[97m";
-    //private static final String BRIGHT_BLACK = "\u001B[90m";
-    private static final String BG_YELLOW = "\u001B[43m";
-    private static final String RESET  = "\u001B[0m";
-
 
     //valutare se spostare WinningPosition dentro il metodo Use e levarlo dalle variabili di classe
     private Set<Position> winningPositions = Set.of();
@@ -40,11 +21,11 @@ public class ConsoleUI {
     public ConsoleUI(Scanner in, PrintStream out) {
         this.in = in;
         this.out = out;
-        this.renderer = new ConsoleRenderer(out);
+        this.consoleRenderer = new ConsoleRenderer(out);
     }
 
     private void render(TurnBasedGame game) {
-        renderer.render(game.getGrid(), winningPositions);
+        consoleRenderer.render(game.getGrid(), winningPositions);
     }
 
 
@@ -109,21 +90,11 @@ public class ConsoleUI {
     }
 
 
-
-
-    //spostato
-    private String colored(String color, String text) {
-        return color + text + RESET;
-    }
-
-
-
     private void handleMove(TurnBasedGame game) {
         while (true) {
             Player playerToMove = game.getCurrentPlayer();
             Position pos = readPosition("Giocatore "
-                    + colored(playerToMove == Player.BLACK ? RED : GREEN,
-                    playerToMove == Player.BLACK ? "NERO" : "BIANCO")
+                    + consoleRenderer.playerLabel(playerToMove)
                     + " scrivi una posizione valida sulla griglia: ");
 
             MoveResult moveResult = game.makeMove(pos);
@@ -144,14 +115,8 @@ public class ConsoleUI {
             return;
         }
 
-        // Se non è IN_PROGRESS e non è DRAW, allora qualcuno ha vinto
-        //winningPositions = new HashSet<>(game.getDecisivePositions());
-
         Player winner = (state == GameState.BLACK_WON) ? Player.BLACK : Player.WHITE;
-        String winnerName = (winner == Player.BLACK) ? "NERO" : "BIANCO";
-        String winnerColor = (winner == Player.BLACK) ? RED : GREEN;
-
-        out.println("Il gioco è terminato, vince: " + colored(winnerColor, winnerName) + "!");
+        out.println("Il gioco è terminato, vince: " + consoleRenderer.playerLabel(winner) + "!");
     }
 
 
