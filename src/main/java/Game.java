@@ -35,7 +35,11 @@ public class Game implements TurnBasedGame {
         return grid;
     }
 
-    public List<Position> getDecisivePositions() { return winningLine; }
+    public List<Position> getDecisivePositions() {
+        //return winningLine;
+        //ritorna SEMPRE una lista immutabile
+        return List.copyOf(winningLine);
+    }
 
     //rimuovere eccezione
     @Override
