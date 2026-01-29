@@ -6,57 +6,66 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class WinCheckerTest {
 
+    private static final int WIN_LENGTH = 5;
+
     final Grid grid = new Grid();
     final WinChecker winChecker = new WinChecker(grid);
+
+    private final int ROWS = grid.getRows();
+    private final int COLS = grid.getColumns();
+    private final int lastRow = ROWS - 1;
+    private final int lastCol = COLS - 1;
+    private final int midRow = ROWS/2;
+    private final int midCol = COLS/2;
 
     @Test
     void getWinningLine_VerticalWin() {
         // Setup
-        for (int r = 0; r < 5; r++)
-            grid.setBlackAt(r, 10);
+
+        for (int r = 0; r < WIN_LENGTH; r++)
+            grid.setBlackAt(r, midCol);
 
         // Act
-        List<Position> winningLine = winChecker.getWinningLine(new Position(3, 10));
+        List<Position> winningLine = winChecker.getWinningLine(new Position(WIN_LENGTH - 2, midCol));
 
         // Assert
-        assertEquals(5, winningLine.size(), "Mi aspetto di trovare 5 pedine");
+        assertEquals(WIN_LENGTH, winningLine.size(), "Mi aspetto di trovare 5 pedine");
     }
 
     @Test
     void getWinningLine_DiagonalWin() {
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < WIN_LENGTH; i++)
             grid.setBlackAt(i, i);
-        List<Position> winningLine = winChecker.getWinningLine(new Position(2, 2));
-        assertEquals(5, winningLine.size());
+        List<Position> winningLine = winChecker.getWinningLine(new Position(WIN_LENGTH/2, WIN_LENGTH/2));
+        assertEquals(WIN_LENGTH, winningLine.size());
     }
 
     @Test
     void getWinningLine_AntiDiagonalWin() {
-        for (int i = 0; i < 5; i++)
-            grid.setBlackAt(i, 14 - i);
-        List<Position> winningLine = winChecker.getWinningLine(new Position(2, 12));
-        assertEquals(5, winningLine.size());
+        for (int i = 0; i < WIN_LENGTH; i++)
+            grid.setBlackAt(i, lastCol - i);
+        List<Position> winningLine = winChecker.getWinningLine(new Position(WIN_LENGTH/2, lastCol-WIN_LENGTH/2));
+        assertEquals(WIN_LENGTH, winningLine.size());
     }
 
     @Test
     void getWinningLine_HorizontalWin() {
-        for (int c = 0; c < 5; c++)
-            grid.setBlackAt(7, c);
-        List<Position> winningLine = winChecker.getWinningLine(new Position(7, 3));
-        assertEquals(5, winningLine.size());
+        for (int c = 0; c < WIN_LENGTH; c++)
+            grid.setBlackAt(midRow, c);
+        List<Position> winningLine = winChecker.getWinningLine(new Position(midRow, WIN_LENGTH-2));
+        assertEquals(WIN_LENGTH, winningLine.size());
     }
 
     @Test
     void getWinningLine_NoWin_ShortLine() { // Solo 4 pedine
-        grid.setBlackAt(0, 0);
-        grid.setBlackAt(0, 1);
-        grid.setBlackAt(0, 2);
-        grid.setBlackAt(0, 3);
-
-        List<Position> winningLine = winChecker.getWinningLine(new Position(0, 3));
+        for (int c = 0; c < WIN_LENGTH - 1; c++) {
+            grid.setBlackAt(midRow, c);
+        }
+        List<Position> winningLine = winChecker.getWinningLine(new Position(midRow, WIN_LENGTH-2));
         assertEquals(0, winningLine.size(), "Mi aspetto che nessuno vinca se meno di 5 pedine sono in fila ");
     }
 
+    //riguardare
     @Test
     void getWinningLine_NoWin_MixedColors() {
         grid.setBlackAt(5, 5);
@@ -70,10 +79,11 @@ class WinCheckerTest {
         assertTrue(resultBlack.isEmpty() && resultWhite.isEmpty(), "Non deve vincere nessuno se i colori sono misti");
     }
 
+
     @Test
     void getWinningLine_Win_IgnoresInterruption_IfLineIsLongEnoughElsewhere() {
-        for (int c = 0; c < 5; c++) grid.setBlackAt(0, c); // Linea orizzontale valida
-        grid.setWhiteAt(0, 5); // Pedina avversaria subito dopo
+        for (int c = 0; c < WIN_LENGTH; c++) grid.setBlackAt(0, c); // Linea orizzontale valida
+        grid.setWhiteAt(0, WIN_LENGTH); // Pedina avversaria subito dopo
 
         List<Position> result = winChecker.getWinningLine(new Position(0, 0));
         assertFalse(result.isEmpty());
@@ -81,12 +91,16 @@ class WinCheckerTest {
 
     @Test
     void getWinningLine_BoundaryWin() { // Test bordo
-        for (int c = 10; c < 15; c++)
-            grid.setBlackAt(14, c);
-        List<Position> result = winChecker.getWinningLine(new Position(14, 12));
+        int startCol = COLS - WIN_LENGTH;
+
+        for (int c = startCol; c < COLS; c++)
+            grid.setBlackAt(lastRow, c);
+
+        List<Position> result = winChecker.getWinningLine(new Position(lastRow, COLS-1));
         assertFalse(result.isEmpty());
     }
 
+    //riguardare
     @Test
     void getWinningLine_NoWin_ScatteredStones() { // Pedine sparse che non formano una linea
         grid.setBlackAt(7, 7);
@@ -98,28 +112,33 @@ class WinCheckerTest {
         grid.setBlackAt(7, 6);
 
         List<Position> result = winChecker.getWinningLine(new Position(7, 7));
-        assertTrue(result.isEmpty(), "5 pedine \"in gruppo\" non devono vincere");
+        assertTrue(result.isEmpty(), "5 pedine diverse \"in gruppo\" non devono vincere");
     }
+
 
     @Test
     void getWinningLine_MultipleDirections_FindsAtLeastOne() {
-        for (int i = 0; i < 5; i++) {
-            grid.setBlackAt(5, i); // Orizzontale
-            grid.setBlackAt(i, 5); // Verticale
+        int row = 4;
+        int col = 4;
+        for (int i = 0; i < WIN_LENGTH; i++) {
+            grid.setBlackAt(row, i); // Orizzontale
+            grid.setBlackAt(i, col); // Verticale
         }
 
         // Deve ritornare una lista valida (una delle due)
-        List<Position> result = winChecker.getWinningLine(new Position(5, 2));
-        assertFalse(result.isEmpty());
+        List<Position> result = winChecker.getWinningLine(new Position(row, col));
         assertTrue(result.size() >= 5);
     }
 
     @Test
     void getWinningLine_Overline_MoreThanFive() { // Almeno 5 in fila
-        for (int i = 0; i < 7; i++)
-            grid.setBlackAt(6, i);
+        int row = 6;
+        int length = WIN_LENGTH + 2;
 
-        List<Position> result = winChecker.getWinningLine(new Position(6, 3));
+        for (int i = 0; i < length; i++)
+            grid.setBlackAt(row, i);
+
+        List<Position> result = winChecker.getWinningLine(new Position(row, WIN_LENGTH/2));
         assertTrue(result.size() >= 5);
     }
 
