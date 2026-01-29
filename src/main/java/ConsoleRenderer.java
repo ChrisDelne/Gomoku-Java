@@ -2,14 +2,42 @@ import java.io.PrintStream;
 import java.util.Set;
 
 public class ConsoleRenderer {
-    //private static final String BLACK = "\u001B[30m";
-    private static final String BLACK = "\u001B[31m";//red
-    private static final String WHITE = "\u001B[34m";//blue
+    private static final String BLACK = "\u001B[31m"; //rosso
+    private static final String WHITE = "\u001B[34m"; //blu
     private static final String POINTS = "\u001B[97m";
-    private static final String HIGHLIGHTED_BACKGROUND = "\u001B[43m";
-    private static final String RESET  = "\u001B[0m";
+    private static final String HIGHLIGHTED_BACKGROUND = "\u001B[43m"; //gialo
+    private static final String RESET = "\u001B[0m";
 
     private final PrintStream out;
+
+    private int rows, cols, rowDigits, colDigits, cellWidth, leftPad, rightPad, innerWidth;
+    private String headerIndent;
+
+    private void setupGridParams(GridView grid){
+        rows = grid.getROWS();
+        cols = grid.getCOLUMNS();
+
+        rowDigits = digits(rows - 1);
+        colDigits = digits(cols - 1);
+
+        // Ogni colonna “prenota”: (max cifre) + 1 spazio di separazione
+        cellWidth = colDigits + 1;
+
+        // Padding tra bordo e prima/ultima colonna
+        leftPad = 1;
+        rightPad = 1;
+
+        /*  Larghezza interna tra ┌ e ┐:
+                leftPad + (cols simboli) + (cols-1) * (spazi tra colonne) + rightPad
+            es. 1 + 15 + 14 * 2 + 1
+                spazio sx + numero puntini + spazio ai lati + spazio dx */
+        innerWidth = leftPad + (cols - 1) * cellWidth + 1 + rightPad;
+
+        /*  Dove inizia la colonna 0 (cioè dove sta il primo simbolo)
+            Riga: [rowDigits cifre] + ' ' + '│' + leftPad spazi  => simbolo
+            numero cifre + 2 spazi(separatore + colonna) + spazi leftpad */
+        headerIndent = repeat(' ', rowDigits + 2) + repeat(' ', leftPad);
+    }
 
     public ConsoleRenderer(PrintStream out) {
         this.out = out;
@@ -17,6 +45,7 @@ public class ConsoleRenderer {
 
     public void render(GridView g, Set<Position> winningPositions) {
         clearScreenAndCursorToHome();
+        printGameHeadlines();
         printGrid(g, winningPositions);
     }
 
@@ -32,7 +61,7 @@ public class ConsoleRenderer {
     }
 
     private static String repeat(char ch, int count) {
-        //math.max per evitare valori negativi
+        // math.max per evitare valori negativi
         return String.valueOf(ch).repeat(Math.max(0, count));
     }
 
@@ -57,45 +86,25 @@ public class ConsoleRenderer {
         return base;
     }
 
-    private void printGrid(GridView g, Set<Position> winningPositions) {
-        final int rows = g.getROWS();
-        final int cols = g.getCOLUMNS();
+    private void printGrid(GridView grid, Set<Position> winningPositions) {
+        setupGridParams(grid);
+        printGridHeader();
+        printGridRows(grid, winningPositions);
+        printGridFooter();
+    }
 
+    private void printGameHeadlines() {
         out.println("===================== GOMOKU =====================\n");
-        out.println("Player1: " + playerLabel(Player.BLACK) + "\t\tvs\t" + "   Player2: " + playerLabel(Player.WHITE)+ "\n");
+        out.println("Player1: " + playerLabel(Player.BLACK) + "\t\tvs\t" + "   Player2: " + playerLabel(Player.WHITE) + "\n");
+    }
 
-
-        //leavare meno uno se si passa a numerazione nomrale invece che index
-        final int rowDigits = digits(rows - 1);
-        final int colDigits = digits(cols - 1);
-
-        // Ogni colonna “prenota”: (max cifre) + 1 spazio di separazione
-        final int cellWidth = colDigits + 1;
-
-        // padding interno tra bordo e prima/ultima colonna
-        final int leftPad = 1;
-        final int rightPad = 1;
-
-        // Larghezza interna tra ┌ e ┐:
-        // leftPad +
-        // (cols simboli) +
-        // (cols-1) * (spazi tra colonne) +
-        // rightPad
-        // es. 1 + 15 + 14 * 2 + 1
-        //   spazio s. + numero puntini + spazio ai lati + spazio destra
-        final int innerWidth = leftPad + (cols - 1) * cellWidth + 1 + rightPad;
-
-        // Dove inizia la colonna 0 (cioè dove sta il primo simbolo)
-        // Riga: [rowDigits cifre] + ' ' + '│' + leftPad spazi  => simbolo
-        // numero cifre + 2 spazi(separatore + colonna) + spazi leftpad
-        final String headerIndent = repeat(' ', rowDigits + 2) + repeat(' ', leftPad);
-
+    private void printGridHeader() {
         // ---------- Header colonne: prima cifra sopra la colonna ----------
         out.print(headerIndent);
         for (int c = 0; c < cols; c++) {
-            String s = Integer.toString(c);                 // "0", "9", "10", ...
-            out.print(s);                                   // prima cifra va “a colonna”
-            out.print(repeat(' ', cellWidth - s.length())); // riempi fino alla prossima colonna
+            String s = Integer.toString(c/*+1*/); // Indici 0-based -> numerazione colonne
+            out.print(s); // Stampa numerazione colonna
+            out.print(repeat(' ', cellWidth - s.length())); // Riempi fino alla prossima colonna
         }
         out.println();
 
@@ -105,30 +114,32 @@ public class ConsoleRenderer {
         out.print(repeat('─', innerWidth));
         out.print('┐');
         out.println();
+    }
 
-        // ---------- Righe ----------
+    private void printGridRows(GridView g, Set<Position> winningPositions) {
         for (int r = 0; r < rows; r++) {
-            out.printf("%" + rowDigits + "d ", r);
+            out.printf("%" + rowDigits + "d ", r/*+1*/); // Indici 0-based -> numerazione righe
 
+            // Padding sinistro: spazio dopo il bordo
             out.print('│');
             out.print(repeat(' ', leftPad));
 
             for (int c = 0; c < cols; c++) {
                 out.print(symbol(new Position(r, c), g.getStateAt(r, c), winningPositions));
 
-                // spazi SOLO tra colonne (non dopo l’ultima)
-                if (c < cols - 1) {
+                // Spazi SOLO tra colonne (non dopo l’ultima)
+                if (c < cols - 1)
                     out.print(repeat(' ', cellWidth - 1));
-                }
             }
 
-            // padding destro “giusto”: 1 spazio prima del bordo
+            // Padding destro: spazio prima del bordo
             out.print(repeat(' ', rightPad));
             out.print('│');
             out.println();
         }
+    }
 
-        // ---------- Bordo inferiore ----------
+    private void printGridFooter() {
         out.print(repeat(' ', rowDigits + 1));
         out.print('└');
         out.print(repeat('─', innerWidth));
@@ -136,7 +147,6 @@ public class ConsoleRenderer {
         out.println();
     }
 
-    //da valutare
     public String playerLabel(Player p) {
         return (p == Player.BLACK) ? colored(BLACK, "NERO") : colored(WHITE, "BIANCO");
     }

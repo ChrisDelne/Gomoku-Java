@@ -1,7 +1,7 @@
 public enum MoveResult {
-    VALID_MOVE(true, "Fair move"),
-    OUT_OF_BOUNDS(false, "Position is out of bounds"),
-    POSITION_OCCUPIED(false, "Position is already occupied");
+    VALID_MOVE(true, "Mossa valida"),
+    OUT_OF_BOUNDS(false, "Posizione fuori griglia"),
+    POSITION_OCCUPIED(false, "Posizione già occupata");
 
     private final boolean valid;
     private final String reasonWhy;
