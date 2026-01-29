@@ -12,18 +12,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ConsoleInputReaderTest {
 
-    // Helper per contare quante volte una sottostringa compare nell'output
-    private static int countOccurrences(String text, String sub) {
-        int count = 0;
-        int idx = 0;
-        while ((idx = text.indexOf(sub, idx)) != -1) {
-            count++;
-            idx += sub.length();
-        }
-        return count;
-    }
-
-    // ------------ Lettura input: readPosition() ------------
 
     @ParameterizedTest
     @CsvSource({
@@ -86,6 +74,20 @@ public class ConsoleInputReaderTest {
     }
 
     @Test
+    void readPosition_ShowError_WhenInputIsInvalid() {
+        String input = "a4\n10 20\n";
+        Scanner in = new Scanner(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
+        ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
+        PrintStream out = new PrintStream(outBuffer, true, StandardCharsets.UTF_8);
+
+        ConsoleInputReader reader = new ConsoleInputReader(in, out);
+        reader.readPosition("Inserisci mossa: ");
+
+        String printed = outBuffer.toString(StandardCharsets.UTF_8);
+        assertEquals(1, TestHelper.countOccurrences(printed, "Input non valido"));
+    }
+
+    @Test
     void readPosition_whenInvalidThenValid_repeatsPromptTwice() {
         String input = "a4\n10 20\n";
         Scanner in = new Scanner(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
@@ -96,7 +98,7 @@ public class ConsoleInputReaderTest {
         reader.readPosition("Inserisci mossa: ");
 
         String printed = outBuffer.toString(StandardCharsets.UTF_8);
-        assertEquals(2, countOccurrences(printed, "Inserisci mossa: "));
+        assertEquals(2, TestHelper.countOccurrences(printed, "Inserisci mossa: "));
     }
 
     @ParameterizedTest

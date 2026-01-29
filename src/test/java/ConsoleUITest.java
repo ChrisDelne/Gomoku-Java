@@ -13,19 +13,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ConsoleUITest {
 
-    // Helper per contare quante volte una sottostringa compare nell'output
-    private static int countOccurrences(String text, String sub) {
-        int count = 0;
-        int idx = 0;
-        while ((idx = text.indexOf(sub, idx)) != -1) {
-            count++;
-            idx += sub.length();
-        }
-        return count;
-    }
-
-    // ------------ Connessione al gioco: use ------------
-
     @Test
     void use_makeMoveAllowed_ifGameInProgress() {
         FakeGame game = new FakeGame()
@@ -90,7 +77,7 @@ public class ConsoleUITest {
 
         String printed = outBuffer.toString(StandardCharsets.UTF_8); //Output catturato
         assertEquals(2, //Verifica che avvengano due errori
-                countOccurrences(printed, result.getReason()),
+                TestHelper.countOccurrences(printed, result.getReason()),
                 "Mi aspetto che l'errore venga mostrato due volte. Output:\n" + printed);
     }
 
