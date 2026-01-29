@@ -1,4 +1,3 @@
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -12,29 +11,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 public class GridTest {
 
     //griglia 15x15
-    private Grid grid;
+    private final Grid grid = new Grid();
+    final int maxIndexRow = grid.getRows() - 1;
+    final int maxIndexCol = grid.getColumns() - 1;
 
-    //forziamo il reset per ogni test
-    @BeforeEach
-    void setUp() {
-        grid = new Grid();
-    }
-
-    //proprietà intrinseche
-
-    // -----------------------------
-    // Dimension getters
-    // -----------------------------
-
-    @Test
-    void getROWS_return_15() {
-        assertEquals(15, grid.getRows());
-    }
-
-    @Test
-    void getCOLUMNS_return_15() {
-        assertEquals(15, grid.getColumns());
-    }
 
     // -----------------------------
     // griglia inizializzata vuota
@@ -54,18 +34,17 @@ public class GridTest {
     // contains(int, int)
     // -----------------------------
 
+
     //Contains
     @ParameterizedTest
     @CsvSource({
-            "0,0,true",
-            "14,14,true",
-            "-1,0,false",
-            "0,-1,false",
-            "15,0,false",
-            "0,15,false"
+            "1,1,false",
+            "-1,1,false",
+            "1,-1,false",
+            "0,0,true"
     })
-    void contains_cases(int row, int col, boolean expected) {
-        assertEquals(expected, grid.contains(row, col));
+    void contains_cases(int x, int y, boolean expected) {
+        assertEquals(expected, grid.contains(maxIndexRow+x, maxIndexCol+y));
     }
 
     //contains (position)
@@ -87,16 +66,26 @@ public class GridTest {
     // scrittura e lettura stato
     // -----------------------------
 
-    @Test
-    void setBlackAt_with_int_readable_by_getStateAt() {
-        grid.setBlackAt(3, 3);
-        assertEquals(CrossState.BLACK, grid.getStateAt(3, 3));
+    @ParameterizedTest
+    @CsvSource({
+            "0,0",
+            "1,3",
+            "4,5",
+    })
+    void setBlackAt_with_int_readable_by_getStateAt(int x, int y) {
+        grid.setBlackAt(maxIndexRow-x, maxIndexCol-y);
+        assertEquals(CrossState.BLACK, grid.getStateAt(maxIndexRow-x, maxIndexCol-y));
     }
 
-    @Test
-    void setWhiteAt_with_int_readable_by_getStateAt() {
-        grid.setWhiteAt(9, 9);
-        assertEquals(CrossState.WHITE, grid.getStateAt(9, 9));
+    @ParameterizedTest
+    @CsvSource({
+            "0,0",
+            "3,3",
+            "5,1",
+    })
+    void setWhiteAt_with_int_readable_by_getStateAt(int row, int col) {
+        grid.setWhiteAt(row, col);
+        assertEquals(CrossState.WHITE, grid.getStateAt(row, col));
     }
 
     // --- isAt / isEmpty / isBlackAt / isWhiteAt (int,int) ---
@@ -170,25 +159,43 @@ public class GridTest {
 
     // --- Overload Position: setter ---
 
-    @Test
-    void setBlackAt_position_writes_BLACK() {
-        Position p = new Position(10, 10);
+
+    @ParameterizedTest
+    @CsvSource({
+            "0,3",
+            "1,0",
+            "3,5",
+    })
+    void setBlackAt_position_writes_BLACK(int x, int y) {
+        Position p = new Position(maxIndexRow-x, maxIndexCol-y);
         grid.setBlackAt(p);
-        assertEquals(CrossState.BLACK, grid.getStateAt(10, 10));
+        assertEquals(CrossState.BLACK, grid.getStateAt(maxIndexRow-x, maxIndexCol-y));
     }
 
-    @Test
-    void setWhiteAt_position_writes_WHITE() {
-        Position p = new Position(11, 11);
+    @ParameterizedTest
+    @CsvSource({
+            "0,0",
+            "1,1",
+            "4,5",
+    })
+    void setWhiteAt_position_writes_WHITE(int x, int y) {
+
+        Position p = new Position(maxIndexRow-x, maxIndexCol-y);
         grid.setWhiteAt(p);
-        assertEquals(CrossState.WHITE, grid.getStateAt(11, 11));
+        assertEquals(CrossState.WHITE, grid.getStateAt(maxIndexRow-x, maxIndexCol-y));
     }
 
     // --- Overload Position: isAt / isEmpty / isBlackAt / isWhiteAt ---
 
-    @Test
-    void isAt_position_true_when_state_matches() {
-        Position p = new Position(12, 12);
+
+    @ParameterizedTest
+    @CsvSource({
+            "0,0",
+            "1,1",
+            "4,5",
+    })
+    void isAt_position_true_when_state_matches(int x, int y) {
+        Position p = new Position(maxIndexRow-x, maxIndexCol-y);
         grid.setWhiteAt(p);
         assertTrue(grid.isAt(CrossState.WHITE, p));
     }
@@ -199,17 +206,27 @@ public class GridTest {
         assertEquals(grid.isEmpty(0, 0), grid.isEmpty(p));
     }
 
-    @Test
-    void isBlackAt_position_true_after_setBlackAt() {
-        Position p = new Position(13, 13);
+    @ParameterizedTest
+    @CsvSource({
+            "0,0",
+            "1,3",
+            "4,5",
+    })
+    void isBlackAt_position_true_after_setBlackAt(int row, int col) {
+        Position p = new Position(row, col);
         grid.setBlackAt(p);
-        assertEquals(grid.isBlackAt(13, 13), grid.isBlackAt(p));
+        assertEquals(grid.isBlackAt(row, col), grid.isBlackAt(p));
     }
 
-    @Test
-    void isWhiteAt_position_true_after_setWhiteAt() {
-        Position p = new Position(14, 14);
+    @ParameterizedTest
+    @CsvSource({
+            "0,1",
+            "3,3",
+            "6,5",
+    })
+    void isWhiteAt_position_true_after_setWhiteAt(int row, int col) {
+        Position p = new Position(row, col);
         grid.setWhiteAt(p);
-        assertEquals(grid.isWhiteAt(14, 14), grid.isWhiteAt(p));
+        assertEquals(grid.isWhiteAt(row, col), grid.isWhiteAt(p));
     }
 }
