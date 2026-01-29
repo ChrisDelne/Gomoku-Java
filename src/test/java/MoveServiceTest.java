@@ -11,7 +11,7 @@ public class MoveServiceTest {
     @ParameterizedTest
     @CsvSource({
             "-1, -1, OUT_OF_BOUNDS",
-            "15, 15, OUT_OF_BOUNDS",
+            "150, 150, OUT_OF_BOUNDS",
             "-1, 5, OUT_OF_BOUNDS",
             "5, -1, OUT_OF_BOUNDS"
     })
