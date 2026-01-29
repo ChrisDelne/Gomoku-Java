@@ -1,4 +1,6 @@
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Game implements TurnBasedGame {
 
@@ -36,10 +38,10 @@ public class Game implements TurnBasedGame {
     }
     //public GridView ciao() {return  grid;}
 
-    public List<Position> getDecisivePositions() {
+    public Set<Position> getDecisivePositions() {
         //return winningLine;
         //ritorna SEMPRE una lista immutabile
-        return List.copyOf(winningLine);
+        return new HashSet<>(List.copyOf(winningLine)) ;
     }
 
     //rimuovere eccezione

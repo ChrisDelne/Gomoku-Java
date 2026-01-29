@@ -1,4 +1,4 @@
-import java.util.Collection;
+import java.util.Set;
 
 public interface TurnBasedGame {
     // Comandi (Input)
@@ -11,5 +11,5 @@ public interface TurnBasedGame {
     Player getCurrentPlayer();
     GridView getGrid();
 
-    Collection<Position> getDecisivePositions();
+    Set<Position> getDecisivePositions();
 }

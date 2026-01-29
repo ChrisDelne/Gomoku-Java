@@ -1,7 +1,4 @@
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 
 public class FakeGame implements TurnBasedGame {
 
@@ -71,8 +68,8 @@ public class FakeGame implements TurnBasedGame {
     }
 
     @Override
-    public List<Position> getDecisivePositions() {
-        return new ArrayList<>();
+    public Set<Position> getDecisivePositions() {
+        return Set.of();
     }
 
 

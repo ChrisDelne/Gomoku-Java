@@ -1,5 +1,4 @@
 import java.io.PrintStream;
-import java.util.HashSet;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,7 +21,7 @@ public class ConsoleUI {
     }
 
     private void render(TurnBasedGame game) {
-        consoleRenderer.render(game.getGrid(), new HashSet<>(game.getDecisivePositions()));
+        consoleRenderer.render(game.getGrid(), game.getDecisivePositions());
     }
 
 
