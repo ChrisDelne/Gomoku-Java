@@ -36,7 +36,7 @@ public class ConsoleUITest {
 
         ConsoleUI ui = new ConsoleUI(in, out);
 
-        assertEquals(new Position(10, 20), ui.readPosition(""));
+        assertEquals(new Position(9, 19), ui.readPosition(""));
     }
 
 
@@ -63,7 +63,7 @@ public class ConsoleUITest {
         Position p = ui.readPosition("Inserisci mossa: ");
 
         // Assert sul valore ritornato
-        assertEquals(new Position(row, col), p);
+        assertEquals(new Position(row-1, col-1), p);
 
         // Assert sull'output stampato
         String printed = outBuffer.toString(StandardCharsets.UTF_8);
@@ -97,7 +97,7 @@ public class ConsoleUITest {
         Position p = ui.readPosition("Inserisci mossa: ");
 
         // Assert sul valore ritornato
-        assertEquals(new Position(row, col), p);
+        assertEquals(new Position(row-1, col-1), p);
 
         // Assert sull'output stampato
         String printed = outBuffer.toString(StandardCharsets.UTF_8);
@@ -112,10 +112,10 @@ public class ConsoleUITest {
     //scarta gli imput non validi
     @ParameterizedTest
     @CsvSource({
-            "'abc\n10 20',          10,20",
-            "'abc\n10,a\n10 20',    10,20",
-            "'adf\nsdg\nfgj\n3 4',  3,4",
-            "';\n,\nciao\n7 8',     7,8"
+            "'abc\n10 20',          9,19",
+            "'abc\n10,a\n10 20',    9,19",
+            "'adf\nsdg\nfgj\n3 4',  2,3",
+            "';\n,\nciao\n7 8',     6,7"
     })
     void readPosition_skips_any_number_of_invalid_inputs(String inputLines, int expectedRow, int expectedCol) {
         Scanner in = new Scanner(new ByteArrayInputStream((inputLines + "\n").getBytes(StandardCharsets.UTF_8)));
@@ -216,7 +216,7 @@ public class ConsoleUITest {
                 .endGameAfterMoves(4, GameState.BLACK_WON);
 
 
-        String userInput = "0 -1\n 0, 0\n -3 -8\n 3 3\n";
+        String userInput = "0 -1\n 1, 1\n -3 -8\n 3 3\n";
         Scanner in = new Scanner(new ByteArrayInputStream(userInput.getBytes(StandardCharsets.UTF_8)));
 
         // Output catturato (opzionale, utile se vuoi controllare cosa stampa)

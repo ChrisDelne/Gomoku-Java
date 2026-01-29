@@ -102,8 +102,8 @@ public class ConsoleRenderer {
         // ---------- Header colonne: prima cifra sopra la colonna ----------
         out.print(headerIndent);
         for (int c = 0; c < cols; c++) {
-            String s = Integer.toString(c/*+1*/); // Indici 0-based -> numerazione colonne
-            out.print(s); // Stampa numerazione colonna
+            String s = Integer.toString(c+1);       // Indici 0-based -> numerazione colonne
+            out.print(s);                             // Stampa numerazione colonna
             out.print(repeat(' ', cellWidth - s.length())); // Riempi fino alla prossima colonna
         }
         out.println();
@@ -118,7 +118,7 @@ public class ConsoleRenderer {
 
     private void printGridRows(GridView g, Set<Position> winningPositions) {
         for (int r = 0; r < rows; r++) {
-            out.printf("%" + rowDigits + "d ", r/*+1*/); // Indici 0-based -> numerazione righe
+            out.printf("%" + rowDigits + "d ", r+1); // Indici 0-based -> numerazione righe
 
             // Padding sinistro: spazio dopo il bordo
             out.print('│');
