@@ -29,14 +29,25 @@ public class ConsoleUITest {
     // =========================================================
 
     // legge piu input validi
-    @Test
-    void Console_can_read_2_int_from_input() {
-        Scanner in = new Scanner(new ByteArrayInputStream("10 20\n".getBytes(StandardCharsets.UTF_8)));
+
+    @ParameterizedTest
+    @CsvSource({
+            "100,20",
+            "010,20",
+            "3,4",
+            "7,-8",
+            "3,4",
+            "7,8"
+
+    })
+    void Console_can_read_2_int_from_input(int row, int col) {
+        String input = row + " " + col + "\n";
+        Scanner in = new Scanner(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
         PrintStream out = new PrintStream(new ByteArrayOutputStream(), true, StandardCharsets.UTF_8);
 
         ConsoleUI ui = new ConsoleUI(in, out);
 
-        assertEquals(new Position(9, 19), ui.readPosition(""));
+        assertEquals(new Position(row-1, col-1), ui.readPosition(""));
     }
 
 

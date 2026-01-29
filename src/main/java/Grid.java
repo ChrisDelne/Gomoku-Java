@@ -11,11 +11,11 @@ public class Grid implements GridView {
                 grid[r][c] = CrossState.EMPTY;
     }
 
-    public int getROWS() {
+    public int getRows() {
         return ROWS;
     }
 
-    public int getCOLUMNS() {
+    public int getColumns() {
         return COLUMNS;
     }
 

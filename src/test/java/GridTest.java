@@ -28,12 +28,12 @@ public class GridTest {
 
     @Test
     void getROWS_return_15() {
-        assertEquals(15, grid.getROWS());
+        assertEquals(15, grid.getRows());
     }
 
     @Test
     void getCOLUMNS_return_15() {
-        assertEquals(15, grid.getCOLUMNS());
+        assertEquals(15, grid.getColumns());
     }
 
     // -----------------------------
@@ -43,8 +43,8 @@ public class GridTest {
     @Test
     void new_grid_is_all_empty() {
         boolean allEmpty =
-                IntStream.range(0, grid.getROWS()).allMatch(r ->
-                        IntStream.range(0, grid.getCOLUMNS()).allMatch(c ->
+                IntStream.range(0, grid.getRows()).allMatch(r ->
+                        IntStream.range(0, grid.getColumns()).allMatch(c ->
                                 grid.getStateAt(r, c) == CrossState.EMPTY));
 
         assertTrue(allEmpty);

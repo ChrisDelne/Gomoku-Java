@@ -14,8 +14,8 @@ public class ConsoleRenderer {
     private String headerIndent;
 
     private void setupGridParams(GridView grid){
-        rows = grid.getROWS();
-        cols = grid.getCOLUMNS();
+        rows = grid.getRows();
+        cols = grid.getColumns();
 
         rowDigits = digits(rows - 1);
         colDigits = digits(cols - 1);

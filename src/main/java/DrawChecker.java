@@ -30,8 +30,8 @@ public class DrawChecker {
         CrossState opponent = (player == CrossState.BLACK) ? CrossState.WHITE : CrossState.BLACK;
 
         //scorriamo tutta la matrice
-        for (int r = 0; r < grid.getROWS(); r++)
-            for (int c = 0; c < grid.getCOLUMNS(); c++) {
+        for (int r = 0; r < grid.getRows(); r++)
+            for (int c = 0; c < grid.getColumns(); c++) {
                 Position position = new Position(r, c);
                 //ci fermiamo quando troviamo una posizione vuota
                 if (grid.isEmpty(position))

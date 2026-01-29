@@ -1,6 +1,6 @@
 public interface GridView {
-    int getROWS();
-    int getCOLUMNS();
+    int getRows();
+    int getColumns();
     boolean contains(int row, int col);
     CrossState getStateAt(int row, int col);
     boolean contains(Position p);
