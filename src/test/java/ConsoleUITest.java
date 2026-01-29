@@ -24,11 +24,7 @@ public class ConsoleUITest {
         return count;
     }
 
-    // =========================================================
-    // lettura input
-    // =========================================================
-
-    // legge piu input validi
+    // ------------ Lettura input: readPosition() ------------
 
     @ParameterizedTest
     @CsvSource({
@@ -40,14 +36,14 @@ public class ConsoleUITest {
             "-7,8"
 
     })
-    void Console_can_read_2_int_from_input(int row, int col) {
+    void readPosition_canRead_2intFromInput(int row, int col) {
         String input = row + " " + col + "\n";
         Scanner in = new Scanner(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
         PrintStream out = new PrintStream(new ByteArrayOutputStream(), true, StandardCharsets.UTF_8);
 
         ConsoleUI ui = new ConsoleUI(in, out);
 
-        assertEquals(new Position(row-1, col-1), ui.readPosition(""));
+        assertEquals(new Position(row - 1, col - 1), ui.readPosition(""));
     }
 
     @ParameterizedTest
@@ -59,14 +55,12 @@ public class ConsoleUITest {
             "'c\n7 8',                                                6,7",
             "'5\n8 9',                                                7,8"
     })
-    void readPosition_whenInvalidThenValid_returnsExpectedPosition(String input, int row, int col) {
+    void readPosition_readsInvalidThenValid_returnsExpectedPosition(String input, int row, int col) {
         Scanner in = new Scanner(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
-
         ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
         PrintStream out = new PrintStream(outBuffer, true, StandardCharsets.UTF_8);
 
         ConsoleUI ui = new ConsoleUI(in, out);
-
         Position p = ui.readPosition("Inserisci mossa: ");
 
         assertEquals(new Position(row, col), p);
@@ -79,17 +73,13 @@ public class ConsoleUITest {
             "'33 g7\n3,4\n'",
             "'\n7,-8\n'",
             "'?\n-7,8\n'"
-
     })
     void readPosition_whenInputNotCorrectlyFormated_printsErrorMessage(String input) {
-
-
         Scanner in = new Scanner(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
         ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
         PrintStream out = new PrintStream(outBuffer, true, StandardCharsets.UTF_8);
 
         ConsoleUI ui = new ConsoleUI(in, out);
-
         ui.readPosition("Inserisci mossa: ");
 
         String printed = outBuffer.toString(StandardCharsets.UTF_8);
@@ -99,13 +89,11 @@ public class ConsoleUITest {
     @Test
     void readPosition_whenInvalidThenValid_repeatsPromptTwice() {
         String input = "a4\n10 20\n";
-
         Scanner in = new Scanner(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
         ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
         PrintStream out = new PrintStream(outBuffer, true, StandardCharsets.UTF_8);
 
         ConsoleUI ui = new ConsoleUI(in, out);
-
         ui.readPosition("Inserisci mossa: ");
 
         String printed = outBuffer.toString(StandardCharsets.UTF_8);
@@ -126,7 +114,6 @@ public class ConsoleUITest {
         assertDoesNotThrow(() -> ui.readPosition("Inserisci mossa: "));
     }
 
-    //scarta gli imput non validi
     @ParameterizedTest
     @CsvSource({
             "'abc\n10 20',          9,19",
@@ -134,7 +121,7 @@ public class ConsoleUITest {
             "'adf\nsdg\nfgj\n3 4',  2,3",
             "';\n,\nciao\n7 8',     6,7"
     })
-    void readPosition_skips_any_number_of_invalid_inputs(String inputLines, int expectedRow, int expectedCol) {
+    void readPosition_whenInvalidInputs_skipUntilValid(String inputLines, int expectedRow, int expectedCol) {
         Scanner in = new Scanner(new ByteArrayInputStream((inputLines + "\n").getBytes(StandardCharsets.UTF_8)));
         PrintStream out = new PrintStream(new ByteArrayOutputStream(), true, StandardCharsets.UTF_8);
         ConsoleUI ui = new ConsoleUI(in, out);
@@ -143,10 +130,8 @@ public class ConsoleUITest {
         assertEquals(new Position(expectedRow, expectedCol), pos);
     }
 
-
-    //lancia eccezione EOF
     @Test
-    void readPosition_throws_if_input_ends() {
+    void readPosition_ifInputEnds_throws() {
         Scanner in = new Scanner(new ByteArrayInputStream("".getBytes(StandardCharsets.UTF_8)));
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
         ConsoleUI ui = new ConsoleUI(in, out);
@@ -154,69 +139,50 @@ public class ConsoleUITest {
         assertThrows(InputTerminatedException.class, () -> ui.readPosition(""));
     }
 
-    //testare pure imput terminato
 
-    // =========================================================
-    // use
-    // =========================================================
+    // ------------ Connessione al gioco: use ------------
 
-
-    //ConsoleUI consoleUI = new ConsoleUI(new Scanner(System.in), System.out);
     @Test
-    void in_progress_make_move(){
+    void use_makeMoveAllowed_ifGameInProgress() {
         FakeGame game = new FakeGame()
                 .withState(GameState.IN_PROGRESS)
                 .endGameAfterMoves(3, GameState.BLACK_WON);
 
-
         String userInput = "1 2\n1 3\n1 4\n";
         Scanner in = new Scanner(new ByteArrayInputStream(userInput.getBytes(StandardCharsets.UTF_8)));
-
         ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
         PrintStream out = new PrintStream(outBuffer, true, StandardCharsets.UTF_8);
 
         ConsoleUI consoleUI = new ConsoleUI(in, out);
-
-        // Act
         consoleUI.use(game);
 
         // Assert: nessuna mossa applicata
         assertEquals(3, game.getMakeMoveCallCount(),
                 "Se lo stato è IN_PROGRESS, ConsoleUI deve chiamare makeMove().");
-
-
     }
 
 
-    //se lo stato non è in progress non applica la mossa
     @ParameterizedTest
     @CsvSource({
             "BLACK_WON",
             "WHITE_WON",
             "DRAW"
     })
-    void not_in_progress_no_move(GameState state){
+    void use_makeMoveNotAllowed_ifGameNotInProgress(GameState state) {
         FakeGame game = new FakeGame()
                 .withState(state);
 
-        // Input "finto": anche se l'utente scrivesse una mossa, la UI non dovrebbe leggerla
         String userInput = "1 2\n";
         Scanner in = new Scanner(new ByteArrayInputStream(userInput.getBytes(StandardCharsets.UTF_8)));
-
-        // Output catturato (opzionale, utile se vuoi controllare cosa stampa)
-        ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
+        ByteArrayOutputStream outBuffer = new ByteArrayOutputStream(); // Cattura output opzionale per controllo di stampa
         PrintStream out = new PrintStream(outBuffer, true, StandardCharsets.UTF_8);
 
         ConsoleUI consoleUI = new ConsoleUI(in, out);
-
-        // Act
         consoleUI.use(game);
 
         // Assert: nessuna mossa applicata
         assertEquals(0, game.getMakeMoveCallCount(),
                 "Se lo stato non è IN_PROGRESS, ConsoleUI non deve chiamare makeMove().");
-
-
     }
 
     //test che amministra una mossa non valida per la logica di gioco
@@ -225,36 +191,27 @@ public class ConsoleUITest {
             "OUT_OF_BOUNDS",
             "POSITION_OCCUPIED"
     })
-    void invalid_gameMove_in_gameLogic(MoveResult result){
+    void use_invalidMoveManagement_inGameLogic(MoveResult result) {
         FakeGame game = new FakeGame()
                 .withScriptedMoveResults(result, MoveResult.VALID_MOVE, result, MoveResult.VALID_MOVE)
                 .endGameAfterMoves(4, GameState.BLACK_WON);
 
-
         String userInput = "0 -1\n 1, 1\n -3 -8\n 3 3\n";
         Scanner in = new Scanner(new ByteArrayInputStream(userInput.getBytes(StandardCharsets.UTF_8)));
-
-        // Output catturato (opzionale, utile se vuoi controllare cosa stampa)
-        ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
+        ByteArrayOutputStream outBuffer = new ByteArrayOutputStream(); // Cattura output opzionale per controllo di stampa
         PrintStream out = new PrintStream(outBuffer, true, StandardCharsets.UTF_8);
 
         ConsoleUI consoleUI = new ConsoleUI(in, out);
-
-        // Act
         consoleUI.use(game);
 
-        // Assert sull'output stampato
-        String printed = outBuffer.toString(StandardCharsets.UTF_8);
-
-        assertEquals(2, //Non verifica più che stampi la frase ma che si verifichino due errori
+        String printed = outBuffer.toString(StandardCharsets.UTF_8); //Output catturato
+        assertEquals(2, //Verifica che avvengano due errori
                 countOccurrences(printed, result.getReason()),
-                "Mi aspetto che l'errore venga mostrato due volte. Output:\n" + printed
-        );
-
+                "Mi aspetto che l'errore venga mostrato due volte. Output:\n" + printed);
     }
 
     @Test
-    void use_printsMessage_and_exits_when_input_ends() {
+    void use_whenInputEnds_printsMessageAndExits() {
         // Arrange: EOF immediato
         Scanner in = new Scanner(new ByteArrayInputStream(new byte[0]));
         ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();

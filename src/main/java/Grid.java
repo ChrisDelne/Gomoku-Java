@@ -19,6 +19,7 @@ public class Grid implements GridView {
         return COLUMNS;
     }
 
+
     public boolean contains(int row, int column) {
         return row >= 0 && row < ROWS && column >= 0 && column < COLUMNS;
     }
@@ -27,9 +28,7 @@ public class Grid implements GridView {
         return contains(position.row(), position.col());
     }
 
-    //getters CrossState
 
-    //Precedentemente getCrossAt
     public CrossState getStateAt(int row, int column) {
         return grid[row][column];
     }
@@ -47,6 +46,7 @@ public class Grid implements GridView {
         return isAt(cross, p.row(), p.col());
     }
 
+
     public boolean isEmpty(int row, int column) {
         return isAt(CrossState.EMPTY, row, column);
     }
@@ -55,7 +55,7 @@ public class Grid implements GridView {
         return isEmpty(position.row(), position.col());
     }
 
-    //isBlackAt
+
     public boolean isBlackAt(int row, int column) {
         return isAt(CrossState.BLACK, row, column);
     }
@@ -64,7 +64,7 @@ public class Grid implements GridView {
         return isBlackAt(position.row(), position.col());
     }
 
-    //isWhiteAt
+
     public boolean isWhiteAt(int row, int column) {
         return isAt(CrossState.WHITE, row, column);
     }
@@ -73,8 +73,6 @@ public class Grid implements GridView {
         return isWhiteAt(position.row(), position.col());
     }
 
-
-    //setters CrossState
 
     public void setBlackAt(int row, int column) { grid[row][column] = CrossState.BLACK; }
 

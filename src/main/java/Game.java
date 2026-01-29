@@ -1,4 +1,3 @@
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -13,7 +12,6 @@ public class Game implements TurnBasedGame {
     private List<Position> winningLine = List.of(); // Lista posizioni vincenti vuota se nessuno ha vinto
 
 
-
     public Game() {
         grid = new Grid();
         moveService = new MoveService(grid);
@@ -23,8 +21,6 @@ public class Game implements TurnBasedGame {
         currentPlayer = Player.BLACK;
     }
 
-
-    //getter
     public GameState getState() {
         return state;
     }
@@ -36,15 +32,12 @@ public class Game implements TurnBasedGame {
     public GridView getGrid() {
         return grid;
     }
-    //public GridView ciao() {return  grid;}
 
     public Set<Position> getDecisivePositions() {
-        //return winningLine;
-        //ritorna SEMPRE una lista immutabile
-        return new HashSet<>(List.copyOf(winningLine)) ;
+        // ritorna SEMPRE una copia
+        return Set.copyOf(winningLine); // conversione a set per utilizzare contains() in UI
     }
 
-    //rimuovere eccezione
     public MoveResult makeMove(Position position) {
         if (state != GameState.IN_PROGRESS)
             throw new IllegalStateException("Game not in progress");
@@ -56,11 +49,10 @@ public class Game implements TurnBasedGame {
         return result;
     }
 
-
     private void advanceGameAfterValidMove(Position position) {
         List<Position> line = winChecker.getWinningLine(position);
-        if (!line.isEmpty()) { // vittoria se la lista delle posizioni vincenti non è vuota
-            winningLine = line; // game sa ora quali sono le posizioni vincenti (date alla UI con getter)
+        if (!line.isEmpty()) { // vittoria
+            winningLine = line;
             state = (currentPlayer == Player.BLACK) ? GameState.BLACK_WON : GameState.WHITE_WON;
             return;
         }
@@ -73,7 +65,6 @@ public class Game implements TurnBasedGame {
         if (state == GameState.IN_PROGRESS) // running
             switchTurn();
     }
-
 
     private void switchTurn() {
         currentPlayer = currentPlayer.other();

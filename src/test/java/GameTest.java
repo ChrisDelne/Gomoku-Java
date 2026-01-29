@@ -51,14 +51,13 @@ class GameTest {
         // colonna per le mosse “di disturbo” del nero, diversa da winCol
         int blackCol = (winCol == 0) ? (cols - 1) : 0;
 
-        // 1) prima mossa NERA (disturbo)
+        // prima mossa NERA (disturbo)
         game.makeMove(p(rows -1, cols -1)); // BLACK
 
         for (int i = 0; i < WIN_LENGTH; i++) {
             game.makeMove(p(startRow + i, winCol));     // WHITE (linea vincente)
-            if (i < WIN_LENGTH - 1) {
-                game.makeMove(p(i+1, blackCol));              // BLACK (disturbo)
-            }
+            if (i < WIN_LENGTH - 1)
+                game.makeMove(p(i+1, blackCol));        // BLACK (disturbo)
         }
     }
 
@@ -139,6 +138,7 @@ class GameTest {
     void afterWinningMove_stateIsBlackWon() {
         Game game = new Game();
         makeBlackWinVertically(game);
+
         assertEquals(GameState.BLACK_WON, game.getState());
     }
 
@@ -146,6 +146,7 @@ class GameTest {
     void afterWinningMove_stateIsWhiteWon() {
         Game game = new Game();
         makeWhiteWinHorizontally(game);
+
         assertEquals(GameState.WHITE_WON, game.getState());
     }
 

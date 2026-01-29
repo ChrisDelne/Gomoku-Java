@@ -7,7 +7,7 @@ class DrawCheckerTest {
     final DrawChecker drawChecker = new DrawChecker(grid);
 
     @Test
-    void isDraw_FullGrid() {
+    void isDraw_notDraw_withFullGrid() {
         for (int r = 0; r < grid.getRows(); r++)
             for (int c = 0; c < grid.getColumns(); c++)
                 grid.setBlackAt(r, c);
@@ -15,7 +15,7 @@ class DrawCheckerTest {
     }
 
     @Test
-    void isDraw_NotFullGrid() {
+    void isDraw_notDraw_withNotFullGrid() {
         for (int r = 0; r < grid.getRows(); r++)
             for (int c = 0; c < grid.getColumns(); c++) {
 
@@ -31,7 +31,7 @@ class DrawCheckerTest {
     }
 
     @Test
-    void isDraw_NotFullGridDraw() {
+    void isDraw_draw_withNotFullGrid() {
         for (int r = 0; r < grid.getRows(); r++)
             for (int c = 0; c < grid.getColumns(); c++) {
                 if (r == grid.getRows() - 1 && c == grid.getColumns() - 1)

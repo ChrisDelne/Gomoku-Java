@@ -2,8 +2,8 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] ignoredArgs) {
-        ConsoleUI ui = new ConsoleUI(new Scanner(System.in), System.out);
 
+        ConsoleUI ui = new ConsoleUI(new Scanner(System.in), System.out);
 
         TurnBasedGame game = new Game();
 

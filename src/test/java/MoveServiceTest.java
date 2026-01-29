@@ -15,10 +15,11 @@ public class MoveServiceTest {
             "-1, 5, OUT_OF_BOUNDS",
             "5, -1, OUT_OF_BOUNDS"
     })
-    void registerMoveOutOfBound(int row, int col, MoveResult expectedResult) {
+    void registerMove_outOfBound(int row, int col, MoveResult expectedResult) {
         Position position = new Position(row, col);
         moveService = new MoveService(new Grid());
         MoveResult result = moveService.registerMove(Player.BLACK, position);
+
         assertEquals(expectedResult, result);
     }
 
@@ -29,10 +30,11 @@ public class MoveServiceTest {
             "10, 10, VALID_MOVE",
             "0, 6, VALID_MOVE"
     })
-    void registerMoveValid(int row, int col, MoveResult expectedResult) {
+    void registerMove_valid(int row, int col, MoveResult expectedResult) {
         Position position = new Position(row, col);
         moveService = new MoveService(new Grid());
         MoveResult result = moveService.registerMove(Player.WHITE, position);
+
         assertEquals(expectedResult, result);
     }
 
@@ -43,11 +45,12 @@ public class MoveServiceTest {
             "8, 2, POSITION_OCCUPIED",
             "1, 9, POSITION_OCCUPIED"
     })
-    void registerMovePositionOccupied(int row, int col, MoveResult expectedResult) {
+    void registerMove_positionOccupied(int row, int col, MoveResult expectedResult) {
         Position position = new Position(row, col);
         moveService = new MoveService(new Grid());
-        moveService.registerMove(Player.BLACK, position); //Occupo la posizione
-        MoveResult result = moveService.registerMove(Player.WHITE, position); //Dovrebbe essere occupata
+        moveService.registerMove(Player.BLACK, position);                       //Occupo la posizione
+        MoveResult result = moveService.registerMove(Player.WHITE, position);   //Dovrebbe essere occupata
+
         assertEquals(expectedResult, result);
     }
 
@@ -58,7 +61,7 @@ public class MoveServiceTest {
             "6, 7",
             "11, 8"
     })
-    void validMoveOccupiesTheGrid(int row, int col) {
+    void validMove_occupiesTheGrid(int row, int col) {
         Grid grid = new Grid();
         moveService = new MoveService(grid);
         Position position = new Position(row, col);

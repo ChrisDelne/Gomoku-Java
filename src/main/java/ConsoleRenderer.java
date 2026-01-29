@@ -5,7 +5,7 @@ public class ConsoleRenderer {
     private static final String BLACK = "\u001B[31m"; //rosso
     private static final String WHITE = "\u001B[34m"; //blu
     private static final String POINTS = "\u001B[97m";
-    private static final String HIGHLIGHTED_BACKGROUND = "\u001B[43m"; //gialo
+    private static final String HIGHLIGHTED_BACKGROUND = "\u001B[43m"; //giallo
     private static final String RESET = "\u001B[0m";
 
     private final PrintStream out;
@@ -19,17 +19,15 @@ public class ConsoleRenderer {
     private int innerWidth;
     private String headerIndent;
 
-    private void setupGridParams(GridView grid){
+    private void setupGridParams(GridView grid) {
         rows = grid.getRows();
         cols = grid.getColumns();
 
         rowDigits = digits(rows - 1);
         final int colDigits = digits(cols - 1);
 
-        // Ogni colonna “prenota”: (max cifre) + 1 spazio di separazione
         cellWidth = colDigits + 1;
 
-        // Padding tra bordo e prima/ultima colonna
         leftPad = 1;
         rightPad = 1;
 
@@ -86,7 +84,7 @@ public class ConsoleRenderer {
             case WHITE -> colored(WHITE, "●");
         };
 
-        if (winningPositions.contains(p))
+        if (winningPositions.contains(p)) // utilizzo contains() su set per efficienza
             return highlight(base);
 
         return base;
@@ -108,7 +106,7 @@ public class ConsoleRenderer {
         // ---------- Header colonne: prima cifra sopra la colonna ----------
         out.print(headerIndent);
         for (int c = 0; c < cols; c++) {
-            String s = Integer.toString(c+1);       // Indici 0-based -> numerazione colonne
+            String s = Integer.toString(c + 1);       // Indici 0-based -> numerazione colonne
             out.print(s);                             // Stampa numerazione colonna
             out.print(repeat(' ', cellWidth - s.length())); // Riempi fino alla prossima colonna
         }
@@ -124,7 +122,7 @@ public class ConsoleRenderer {
 
     private void printGridRows(GridView g, Set<Position> positionsToHighlight) {
         for (int r = 0; r < rows; r++) {
-            out.printf("%" + rowDigits + "d ", r+1); // Indici 0-based -> numerazione righe
+            out.printf("%" + rowDigits + "d ", r + 1); // Indici 0-based -> numerazione righe
 
             // Padding sinistro: spazio dopo il bordo
             out.print('│');

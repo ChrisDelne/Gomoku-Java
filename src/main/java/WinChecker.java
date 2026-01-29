@@ -10,7 +10,6 @@ public class WinChecker {
         this.grid = grid;
     }
 
-
     private void addRun(List<Position> acc, int row, int col, int dRow, int dCol, CrossState color) {
         while (grid.contains(row, col) && grid.getStateAt(row, col) == color) {
             acc.add(new Position(row, col));
@@ -19,7 +18,7 @@ public class WinChecker {
         }
     }
 
-    //Aggiunge la posizione di partenza e poi scorre in entrambe le direzioni della linea
+    // Aggiunge la posizione di partenza e poi scorre in entrambe le direzioni della linea
     private List<Position> collectLine(Position start, Direction dir, CrossState color) {
 
         List<Position> result = new ArrayList<>();
@@ -33,12 +32,10 @@ public class WinChecker {
         // indietro
         addRun(result, start.row() - deltaRow, start.col() - deltaCol, -deltaRow, -deltaCol, color);
 
-
         return result;
     }
 
-
-    public List<Position> getWinningLine(Position position) { //Se mossa vincente, torna (calcola) a Game quali posizioni
+    public List<Position> getWinningLine(Position position) { // Se mossa vincente, torna (calcola) a Game quali posizioni
         CrossState color = grid.getStateAt(position);
         if (color == CrossState.EMPTY)
             return List.of();
