@@ -10,6 +10,15 @@ public class WinChecker {
         this.grid = grid;
     }
 
+
+    private void addRun(List<Position> acc, int row, int col, int dRow, int dCol, CrossState color) {
+        while (grid.contains(row, col) && grid.getStateAt(row, col) == color) {
+            acc.add(new Position(row, col));
+            row += dRow;
+            col += dCol;
+        }
+    }
+
     //Aggiunge la posizione di partenza e poi scorre in entrambe le direzioni della linea
     private List<Position> collectLine(Position start, Direction dir, CrossState color) {
 
@@ -19,23 +28,11 @@ public class WinChecker {
         int deltaRow = dir.deltaRow();
         int deltaCol = dir.deltaColumn();
 
-        // avanti per la stessa direzione
-        int row = start.row() + deltaRow;
-        int col = start.col() + deltaCol;
-        while (grid.contains(row, col) && grid.getStateAt(row, col) == color) {
-            result.add(new Position(row, col));
-            row += deltaRow;
-            col += deltaCol;
-        }
+        // avanti
+        addRun(result, start.row() + deltaRow, start.col() + deltaCol, deltaRow, deltaCol, color);
+        // indietro
+        addRun(result, start.row() - deltaRow, start.col() - deltaCol, -deltaRow, -deltaCol, color);
 
-        // indietro per la stessa direzione
-        row = start.row() - deltaRow;
-        col = start.col() - deltaCol;
-        while (grid.contains(row, col) && grid.getStateAt(row, col) == color) {
-            result.add(new Position(row, col));
-            row -= deltaRow;
-            col -= deltaCol;
-        }
 
         return result;
     }

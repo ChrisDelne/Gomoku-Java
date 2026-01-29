@@ -11,8 +11,7 @@ public class FakeGame implements TurnBasedGame {
     // -------------------------
     // Campi fake per configurare il comportamento (Stub)
     private GameState state = GameState.IN_PROGRESS;
-    private Player currentPlayer = Player.BLACK;
-    private Grid grid = new Grid();
+    private final Grid grid = new Grid();
 
 
     // --- Script for makeMove results (Stub behaviour) --
@@ -30,8 +29,6 @@ public class FakeGame implements TurnBasedGame {
     // Spy: dati registrati
     // -------------------------
     private int makeMoveCallCount = 0;
-    //farla diventare una lista delle mosse effettivamente attuate oppure crearne una seconda
-    private final List<Position> receivedPositions = new ArrayList<>();
 
 
     // =========================================================
@@ -40,9 +37,8 @@ public class FakeGame implements TurnBasedGame {
 
 
     @Override
-    public MoveResult makeMove(Position position) {
+    public MoveResult makeMove(Position positionNotUsed) {
         makeMoveCallCount++;
-        receivedPositions.add(position);
 
         // Se configurato, cambia lo stato dopo N chiamate (utile per far terminare un loop UI)
         //controlliamo sia impostato ad un valore valido(non -1) e nel caso facciamo il confronto
@@ -66,7 +62,7 @@ public class FakeGame implements TurnBasedGame {
 
     @Override
     public Player getCurrentPlayer() {
-        return currentPlayer;
+        return Player.BLACK;
     }
 
     @Override
