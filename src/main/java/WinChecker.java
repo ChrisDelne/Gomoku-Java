@@ -3,10 +3,10 @@ import java.util.List;
 
 public class WinChecker {
 
-    private final Grid grid;
+    private final GridView grid;
     private static final int WIN_LENGTH = 5;
 
-    public WinChecker(Grid grid) {
+    public WinChecker(GridView grid) {
         this.grid = grid;
     }
 
