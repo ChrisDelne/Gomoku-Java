@@ -36,21 +36,21 @@ public class ConsoleUITest {
 
         ConsoleUI ui = new ConsoleUI(in, out);
 
-        assertEquals(new Position(10, 20), ui.readPosition(""));
+        assertEquals(new Position(9, 19), ui.readPosition(""));
     }
 
 
     @ParameterizedTest
     @CsvSource({
-            "'a4\n10 20',                             10,20",
-            "'5t - 43\n10 20',                        10,20",
-            "'ciao 9999999999999999999\n3 4',         3,4",
-            "'9999999999999999999 mondo\n7 8',        7,8",
-            "'ciao mondo\n3 4',                       3,4",
-            "';\n7 8',                                7,8"
+            "'a4\n10 20',                             9,19",
+            "'5t - 43\n10 20',                        9,19",
+            "'ciao 9999999999999999999\n3 4',         2,3",
+            "'9999999999999999999 mondo\n7 8',        6,7",
+            "'ciao mondo\n3 4',                       2,3",
+            "';\n7 8',                                6,7"
 
     })
-    void readPosition_whenInputDoesNotMatchRegex_printsErrorAndRetries(String input, int row, int col) {
+    void readPosition_whenInputDoesNotMatchRegex_printsErrorAndRetries(String input, int expectedRow, int expectedCol) {
         // Arrange: prima riga invalida, poi riga valida (così il metodo termina)
         Scanner in = new Scanner(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
 
@@ -63,7 +63,7 @@ public class ConsoleUITest {
         Position p = ui.readPosition("Inserisci mossa: ");
 
         // Assert sul valore ritornato
-        assertEquals(new Position(row, col), p);
+        assertEquals(new Position(expectedRow, expectedCol), p);
 
         // Assert sull'output stampato
         String printed = outBuffer.toString(StandardCharsets.UTF_8);
@@ -78,12 +78,12 @@ public class ConsoleUITest {
 
     @ParameterizedTest
     @CsvSource({
-            "'9999999999999999999 1\n10 20',                         10,20",
-            "'3 9999999999999999999\n10 20',                         10,20",
-            "'9999999999999999999  9999999999999999999\n3 4',         3,4",
-            "'77777777777777777777 77777777777777777777\n7 8',        7,8"
+            "'9999999999999999999 1\n10 20',                         9,19",
+            "'3 9999999999999999999\n10 20',                         9,19",
+            "'9999999999999999999  9999999999999999999\n3 4',         2,3",
+            "'77777777777777777777 77777777777777777777\n7 8',        6,7"
     })
-    void readPosition_whenNumberTooLarge_printsRangeErrorAndRetries(String userInput, int row, int col) {
+    void readPosition_whenNumberTooLarge_printsRangeErrorAndRetries(String userInput, int expectedRow, int expectedCol) {
         // Arrange: numero fuori range per int, poi riga valida
         // 9999999999999999999 non entra in int -> Integer.parseInt lancia NumberFormatException
         Scanner in = new Scanner(new ByteArrayInputStream(userInput.getBytes(StandardCharsets.UTF_8)));
@@ -97,7 +97,7 @@ public class ConsoleUITest {
         Position p = ui.readPosition("Inserisci mossa: ");
 
         // Assert sul valore ritornato
-        assertEquals(new Position(row, col), p);
+        assertEquals(new Position(expectedRow, expectedCol), p);
 
         // Assert sull'output stampato
         String printed = outBuffer.toString(StandardCharsets.UTF_8);
@@ -112,10 +112,10 @@ public class ConsoleUITest {
     //scarta gli imput non validi
     @ParameterizedTest
     @CsvSource({
-            "'abc\n10 20',          10,20",
-            "'abc\n10,a\n10 20',    10,20",
-            "'adf\nsdg\nfgj\n3 4',  3,4",
-            "';\n,\nciao\n7 8',     7,8"
+            "'abc\n10 20',          9,19",
+            "'abc\n10,a\n10 20',    9,19",
+            "'adf\nsdg\nfgj\n3 4',  2,3",
+            "';\n,\nciao\n7 8',     6,7"
     })
     void readPosition_skips_any_number_of_invalid_inputs(String inputLines, int expectedRow, int expectedCol) {
         Scanner in = new Scanner(new ByteArrayInputStream((inputLines + "\n").getBytes(StandardCharsets.UTF_8)));
@@ -171,7 +171,6 @@ public class ConsoleUITest {
     }
 
 
-
     //se lo stato non è in progress non applica la mossa
     @ParameterizedTest
     @CsvSource({
@@ -179,7 +178,6 @@ public class ConsoleUITest {
             "WHITE_WON",
             "DRAW"
     })
-
     void not_in_progres_no_move(GameState state){
         FakeGame game = new FakeGame()
                 .withState(state);
@@ -216,7 +214,7 @@ public class ConsoleUITest {
                 .endGameAfterMoves(4, GameState.BLACK_WON);
 
 
-        String userInput = "0 -1\n 0, 0\n -3 -8\n 3 3\n";
+        String userInput = "0 -1\n 1, 1\n -3 -8\n 3 3\n";
         Scanner in = new Scanner(new ByteArrayInputStream(userInput.getBytes(StandardCharsets.UTF_8)));
 
         // Output catturato (opzionale, utile se vuoi controllare cosa stampa)

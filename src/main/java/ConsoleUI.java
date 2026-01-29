@@ -31,9 +31,8 @@ public class ConsoleUI {
         while (true) {                 // 1) ripeti finché non ottieni un input valido
             out.print(prompt);         // 2) mostra il messaggio all'utente
 
-            if (!in.hasNextLine()) {   // 3) se non esiste un'altra riga (EOF, input chiuso)
+            if (!in.hasNextLine())   // 3) se non esiste un'altra riga (EOF, input chiuso)
                 throw new InputTerminatedException("Input terminato.");
-            }
 
             String line = in.nextLine();         // 4) leggi TUTTA la riga come stringa
             Matcher m = TWO_INTS.matcher(line);  // 5) prepara un "matcher" per confrontare la riga con la regex
@@ -46,20 +45,18 @@ public class ConsoleUI {
 
                     // 8) ritorna la coppia -> esci dal metodo
                     //-1 converte da numero vero ad indice
-                    return new Position(row, col);
+                    return new Position(row-1, col-1); // Numerazione righe/colonne -> indici 0-based
                 } catch (NumberFormatException ex) {
                     // caso: numero enorme fuori range di int
                     out.println("> Valore fuori range per int. Riprova.");
                 }
-            } else {
+            } else
                 out.println("> Input non valido: inserisci SOLO due numeri interi (es. \"3 4\").");
-            }
         }
     }
 
 
     //gestire exception EOF
-    //gestire numeri griglia != indici griglia
     public void use(TurnBasedGame game) {
         try {
             while (game.getState() == GameState.IN_PROGRESS) {
@@ -92,9 +89,8 @@ public class ConsoleUI {
 
             MoveResult moveResult = game.makeMove(pos);
 
-            if (moveResult.isValid()) {
+            if (moveResult.isValid())
                 return;
-            }
 
             out.println("> " + moveResult.getReason());
         }
