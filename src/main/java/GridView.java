@@ -3,7 +3,6 @@ public interface GridView {
     int getColumns();
     boolean contains(int row, int col);
     CrossState getStateAt(int row, int col);
-    boolean contains(Position p);
     CrossState getStateAt(Position p);
     boolean isEmpty(Position position);
 }

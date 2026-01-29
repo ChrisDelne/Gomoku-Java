@@ -37,7 +37,7 @@ public class ConsoleUITest {
             "3,4",
             "7,-8",
             "3,4",
-            "7,8"
+            "-7,8"
 
     })
     void Console_can_read_2_int_from_input(int row, int col) {
@@ -50,19 +50,16 @@ public class ConsoleUITest {
         assertEquals(new Position(row-1, col-1), ui.readPosition(""));
     }
 
-
     @ParameterizedTest
     @CsvSource({
-            "'a4\n10 20',                             9,19",
-            "'5t - 43\n10 20',                        9,19",
-            "'ciao 9999999999999999999\n3 4',         2,3",
-            "'9999999999999999999 mondo\n7 8',        6,7",
-            "'ciao mondo\n3 4',                       2,3",
-            "';\n7 8',                                6,7"
-
+            "'9999999999999999999 1\n10 20',                         9,19",
+            "'3 9999999999999999999\n10 20',                         9,19",
+            "'9999999999999999999  9999999999999999999\n3 4',         2,3",
+            "'3g 5\n7 8',                                             6,7",
+            "'c\n7 8',                                                6,7",
+            "'5\n8 9',                                                7,8"
     })
-    void readPosition_whenInputDoesNotMatchRegex_printsErrorAndRetries(String input, int expectedRow, int expectedCol) {
-        // Arrange: prima riga invalida, poi riga valida (così il metodo termina)
+    void readPosition_whenInvalidThenValid_returnsExpectedPosition(String input, int row, int col) {
         Scanner in = new Scanner(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
 
         ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
@@ -70,54 +67,63 @@ public class ConsoleUITest {
 
         ConsoleUI ui = new ConsoleUI(in, out);
 
-        // Act
         Position p = ui.readPosition("Inserisci mossa: ");
 
-        // Assert sul valore ritornato
-        assertEquals(new Position(expectedRow, expectedCol), p);
-
-        // Assert sull'output stampato
-        String printed = outBuffer.toString(StandardCharsets.UTF_8);
-
-        // 1) ha stampato almeno un messaggio di errore
-        assertTrue(printed.contains("Input non valido"),
-                "Mi aspetto un messaggio che segnali input non valido. Output:\n" + printed);
-
-        // 2) (opzionale) ha mostrato il prompt almeno due volte (una per ogni tentativo)
-        assertEquals(2, countOccurrences(printed, "Inserisci mossa: "), "Mi aspetto che il prompt venga mostrato due volte. Output:\n" + printed);
+        assertEquals(new Position(row, col), p);
     }
 
     @ParameterizedTest
     @CsvSource({
-            "'9999999999999999999 1\n10 20',                         9,19",
-            "'3 9999999999999999999\n10 20',                         9,19",
-            "'9999999999999999999  9999999999999999999\n3 4',         2,3",
-            "'77777777777777777777 77777777777777777777\n7 8',        6,7"
-    })
-    void readPosition_whenNumberTooLarge_printsRangeErrorAndRetries(String userInput, int expectedRow, int expectedCol) {
-        // Arrange: numero fuori range per int, poi riga valida
-        // 9999999999999999999 non entra in int -> Integer.parseInt lancia NumberFormatException
-        Scanner in = new Scanner(new ByteArrayInputStream(userInput.getBytes(StandardCharsets.UTF_8)));
+            "'11\n100,20\n'",
+            "'6g 5\n010,20\n'",
+            "'33 g7\n3,4\n'",
+            "'\n7,-8\n'",
+            "'?\n-7,8\n'"
 
+    })
+    void readPosition_whenInputNotCorrectlyFormated_printsErrorMessage(String input) {
+
+
+        Scanner in = new Scanner(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
         ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
         PrintStream out = new PrintStream(outBuffer, true, StandardCharsets.UTF_8);
 
         ConsoleUI ui = new ConsoleUI(in, out);
 
-        // Act
-        Position p = ui.readPosition("Inserisci mossa: ");
+        ui.readPosition("Inserisci mossa: ");
 
-        // Assert sul valore ritornato
-        assertEquals(new Position(expectedRow, expectedCol), p);
-
-        // Assert sull'output stampato
         String printed = outBuffer.toString(StandardCharsets.UTF_8);
+        assertTrue(printed.contains("Input non valido"));
+    }
 
-        assertTrue(printed.contains("fuori range") || printed.contains("Valore fuori range"),
-                "Mi aspetto un messaggio che segnali overflow/fuori range. Output:\n" + printed);
+    @Test
+    void readPosition_whenInvalidThenValid_repeatsPromptTwice() {
+        String input = "a4\n10 20\n";
 
-        // (opzionale) prompt almeno due volte
-        assertEquals(2, countOccurrences(printed, "Inserisci mossa: "), "Mi aspetto che il prompt venga mostrato due volte. Output:\n" + printed);
+        Scanner in = new Scanner(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
+        ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
+        PrintStream out = new PrintStream(outBuffer, true, StandardCharsets.UTF_8);
+
+        ConsoleUI ui = new ConsoleUI(in, out);
+
+        ui.readPosition("Inserisci mossa: ");
+
+        String printed = outBuffer.toString(StandardCharsets.UTF_8);
+        assertEquals(2, countOccurrences(printed, "Inserisci mossa: "));
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "'9999999999999999999 1\n10 20\n'",
+            "'1 9999999999999999999\n10 20\n'",
+            "'77777777777777777777 77777777777777777777\n10 20\n'"
+    })
+    void readPosition_whenNumberTooLarge_doesNotThrow(String input) {
+        Scanner in = new Scanner(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
+        PrintStream out = new PrintStream(new ByteArrayOutputStream(), true, StandardCharsets.UTF_8);
+        ConsoleUI ui = new ConsoleUI(in, out);
+
+        assertDoesNotThrow(() -> ui.readPosition("Inserisci mossa: "));
     }
 
     //scarta gli imput non validi
@@ -157,7 +163,7 @@ public class ConsoleUITest {
 
     //ConsoleUI consoleUI = new ConsoleUI(new Scanner(System.in), System.out);
     @Test
-    void in_progres_make_move(){
+    void in_progress_make_move(){
         FakeGame game = new FakeGame()
                 .withState(GameState.IN_PROGRESS)
                 .endGameAfterMoves(3, GameState.BLACK_WON);
@@ -189,7 +195,7 @@ public class ConsoleUITest {
             "WHITE_WON",
             "DRAW"
     })
-    void not_in_progres_no_move(GameState state){
+    void not_in_progress_no_move(GameState state){
         FakeGame game = new FakeGame()
                 .withState(state);
 

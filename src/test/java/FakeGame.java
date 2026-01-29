@@ -91,18 +91,6 @@ public class FakeGame implements TurnBasedGame {
         return this;
     }
 
-    /** Imposta il player ritornato da getCurrentPlayer(). */
-    public FakeGame withCurrentPlayer(Player player) {
-        this.currentPlayer = player;
-        return this;
-    }
-
-    /** Imposta la griglia ritornata da getGrid(). */
-    public FakeGame withGrid(Grid grid) {
-        this.grid = grid;
-        return this;
-    }
-
 
     /*
     Script dei risultati che makeMove() ritornerà in sequenza.
@@ -127,12 +115,6 @@ public class FakeGame implements TurnBasedGame {
     }
 
     //non so se effettivamente serve
-    /** (Opzionale) Resetta solo i dati spy (contatori e posizioni). */
-    public FakeGame resetSpy() {
-        this.makeMoveCallCount = 0;
-        this.receivedPositions.clear();
-        return this;
-    }
 
 
     // =========================================================
@@ -143,15 +125,10 @@ public class FakeGame implements TurnBasedGame {
         return makeMoveCallCount;
     }
 
-    /** Ritorna una copia delle posizioni ricevute, in ordine. */
-    public List<Position> getReceivedPositions() {
-        return new ArrayList<>(receivedPositions);
-    }
 
-    /** Ultima posizione ricevuta, o null se nessuna. */
-    public Position getLastReceivedPosition() {
-        if (receivedPositions.isEmpty()) return null;
-        return receivedPositions.getLast();
-    }
+    //da eliminare
+
+
+    //da eliminare
 
 }
