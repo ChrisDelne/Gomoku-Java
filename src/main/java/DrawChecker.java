@@ -1,7 +1,7 @@
 public class DrawChecker {
-    private final Grid grid;
+    private final GridView grid;
 
-    public DrawChecker(Grid grid) {
+    public DrawChecker(GridView grid) {
         this.grid = grid;
     }
 

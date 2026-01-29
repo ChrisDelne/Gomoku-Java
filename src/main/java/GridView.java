@@ -5,4 +5,5 @@ public interface GridView {
     CrossState getStateAt(int row, int col);
     boolean contains(Position p);
     CrossState getStateAt(Position p);
+    boolean isEmpty(Position position);
 }
