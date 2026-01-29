@@ -1,7 +1,7 @@
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public class ConsoleUI {
+public class ConsoleUI{
 
     private final PrintStream out;
     private final ConsoleRenderer consoleRenderer;
@@ -13,6 +13,8 @@ public class ConsoleUI {
         this.consoleRenderer = new ConsoleRenderer(out);
         this.consoleInputReader = new ConsoleInputReader(in, out);
     }
+
+
 
     private void render(TurnBasedGame game) {
         consoleRenderer.render(game.getGrid(), game.getDecisivePositions());

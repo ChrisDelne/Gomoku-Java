@@ -2,16 +2,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class ConsoleUITest {
+public class ConsoleUITest extends BaseConsoleTest{
 
     @Test
     void use_makeMoveAllowed_ifGameInProgress() {
@@ -19,10 +15,7 @@ public class ConsoleUITest {
                 .withState(GameState.IN_PROGRESS)
                 .endGameAfterMoves(3, GameState.BLACK_WON);
 
-        String userInput = "1 2\n1 3\n1 4\n";
-        Scanner in = new Scanner(new ByteArrayInputStream(userInput.getBytes(StandardCharsets.UTF_8)));
-        ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
-        PrintStream out = new PrintStream(outBuffer, true, StandardCharsets.UTF_8);
+        Scanner in = createScanner("1 2\n1 3\n1 4\n");
 
         ConsoleUI consoleUI = new ConsoleUI(in, out);
         consoleUI.use(game);
@@ -43,10 +36,7 @@ public class ConsoleUITest {
         FakeGame game = new FakeGame()
                 .withState(state);
 
-        String userInput = "1 2\n";
-        Scanner in = new Scanner(new ByteArrayInputStream(userInput.getBytes(StandardCharsets.UTF_8)));
-        ByteArrayOutputStream outBuffer = new ByteArrayOutputStream(); // Cattura output opzionale per controllo di stampa
-        PrintStream out = new PrintStream(outBuffer, true, StandardCharsets.UTF_8);
+        Scanner in = createScanner("1 2\n");
 
         ConsoleUI consoleUI = new ConsoleUI(in, out);
         consoleUI.use(game);
@@ -67,15 +57,12 @@ public class ConsoleUITest {
                 .withScriptedMoveResults(result, MoveResult.VALID_MOVE, result, MoveResult.VALID_MOVE)
                 .endGameAfterMoves(4, GameState.BLACK_WON);
 
-        String userInput = "0 -1\n 1, 1\n -3 -8\n 3 3\n";
-        Scanner in = new Scanner(new ByteArrayInputStream(userInput.getBytes(StandardCharsets.UTF_8)));
-        ByteArrayOutputStream outBuffer = new ByteArrayOutputStream(); // Cattura output opzionale per controllo di stampa
-        PrintStream out = new PrintStream(outBuffer, true, StandardCharsets.UTF_8);
-
+        Scanner in = createScanner("0 -1\n 1, 1\n -3 -8\n 3 3\n");
         ConsoleUI consoleUI = new ConsoleUI(in, out);
+
         consoleUI.use(game);
 
-        String printed = outBuffer.toString(StandardCharsets.UTF_8); //Output catturato
+        String printed = getCapturedOutput(); //Output catturato
         assertEquals(2, //Verifica che avvengano due errori
                 TestHelper.countOccurrences(printed, result.getReason()),
                 "Mi aspetto che l'errore venga mostrato due volte. Output:\n" + printed);
@@ -84,19 +71,15 @@ public class ConsoleUITest {
     @Test
     void use_whenInputEnds_printsMessageAndExits() {
         // Arrange: EOF immediato
-        Scanner in = new Scanner(new ByteArrayInputStream(new byte[0]));
-        ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
-        PrintStream out = new PrintStream(outBuffer, true, StandardCharsets.UTF_8);
-
+        Scanner in = createScanner("");
         ConsoleUI ui = new ConsoleUI(in, out);
-
         FakeGame game = new FakeGame().withState(GameState.IN_PROGRESS);
 
         // Act + Assert: non deve propagare l'eccezione
         assertDoesNotThrow(() -> ui.use(game));
 
         // Assert: deve stampare il messaggio di uscita
-        String printed = outBuffer.toString(StandardCharsets.UTF_8);
+        String printed = getCapturedOutput();
         assertTrue(printed.contains("Input terminato. Uscita dalla partita."),
                 "Mi aspetto un messaggio di uscita quando l'input termina. Output:\n" + printed);
     }

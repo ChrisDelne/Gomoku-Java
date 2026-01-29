@@ -2,15 +2,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ConsoleInputReaderTest {
+public class ConsoleInputReaderTest extends BaseConsoleTest{
 
 
     @ParameterizedTest
@@ -25,9 +22,7 @@ public class ConsoleInputReaderTest {
     })
     void readPosition_canRead_2intFromInput(int row, int col) {
         String input = row + " " + col + "\n";
-        Scanner in = new Scanner(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
-        PrintStream out = new PrintStream(new ByteArrayOutputStream(), true, StandardCharsets.UTF_8);
-
+        Scanner in = createScanner(input); // Uso helper
         ConsoleInputReader reader = new ConsoleInputReader(in, out);
 
         assertEquals(new Position(row - 1, col - 1), reader.readPosition(""));
@@ -43,9 +38,7 @@ public class ConsoleInputReaderTest {
             "'5\n8 9',                                                7,8"
     })
     void readPosition_readsInvalidThenValid_returnsExpectedPosition(String input, int row, int col) {
-        Scanner in = new Scanner(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
-        ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
-        PrintStream out = new PrintStream(outBuffer, true, StandardCharsets.UTF_8);
+        Scanner in = createScanner(input); // Uso helper
 
         ConsoleInputReader reader = new ConsoleInputReader(in, out);
         Position p = reader.readPosition("Inserisci mossa: ");
@@ -62,9 +55,7 @@ public class ConsoleInputReaderTest {
             "'?\n-7,8\n'"
     })
     void readPosition_whenInputNotCorrectlyFormated_printsErrorMessage(String input) {
-        Scanner in = new Scanner(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
-        ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
-        PrintStream out = new PrintStream(outBuffer, true, StandardCharsets.UTF_8);
+        Scanner in = createScanner(input); // Uso helper
 
         ConsoleInputReader reader = new ConsoleInputReader(in, out);
         reader.readPosition("Inserisci mossa: ");
@@ -75,12 +66,9 @@ public class ConsoleInputReaderTest {
 
     @Test
     void readPosition_ShowError_WhenInputIsInvalid() {
-        String input = "a4\n10 20\n";
-        Scanner in = new Scanner(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
-        ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
-        PrintStream out = new PrintStream(outBuffer, true, StandardCharsets.UTF_8);
-
+        Scanner in = createScanner("a4\n10 20\n");
         ConsoleInputReader reader = new ConsoleInputReader(in, out);
+
         reader.readPosition("Inserisci mossa: ");
 
         String printed = outBuffer.toString(StandardCharsets.UTF_8);
@@ -89,12 +77,9 @@ public class ConsoleInputReaderTest {
 
     @Test
     void readPosition_whenInvalidThenValid_repeatsPromptTwice() {
-        String input = "a4\n10 20\n";
-        Scanner in = new Scanner(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
-        ByteArrayOutputStream outBuffer = new ByteArrayOutputStream();
-        PrintStream out = new PrintStream(outBuffer, true, StandardCharsets.UTF_8);
-
+        Scanner in = createScanner("a4\n10 20\n");
         ConsoleInputReader reader = new ConsoleInputReader(in, out);
+
         reader.readPosition("Inserisci mossa: ");
 
         String printed = outBuffer.toString(StandardCharsets.UTF_8);
@@ -108,8 +93,7 @@ public class ConsoleInputReaderTest {
             "'77777777777777777777 77777777777777777777\n10 20\n'"
     })
     void readPosition_whenNumberTooLarge_doesNotThrow(String input) {
-        Scanner in = new Scanner(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
-        PrintStream out = new PrintStream(new ByteArrayOutputStream(), true, StandardCharsets.UTF_8);
+        Scanner in = createScanner(input);
         ConsoleInputReader reader = new ConsoleInputReader(in, out);
 
         assertDoesNotThrow(() -> reader.readPosition("Inserisci mossa: "));
@@ -123,9 +107,13 @@ public class ConsoleInputReaderTest {
             "';\n,\nciao\n7 8',     6,7"
     })
     void readPosition_whenInvalidInputs_skipUntilValid(String inputLines, int expectedRow, int expectedCol) {
-        Scanner in = new Scanner(new ByteArrayInputStream((inputLines + "\n").getBytes(StandardCharsets.UTF_8)));
-        PrintStream out = new PrintStream(new ByteArrayOutputStream(), true, StandardCharsets.UTF_8);
+        // Usa l'helper createScanner concatenando il newline finale per sicurezza
+        // (necessario affinché lo scanner legga l'ultima riga come completa)
+        Scanner in = createScanner(inputLines + "\n");
+
+        // Usa 'out' ereditato da BaseConsoleTest
         ConsoleInputReader reader = new ConsoleInputReader(in, out);
+
 
         Position pos = reader.readPosition("");
         assertEquals(new Position(expectedRow, expectedCol), pos);
@@ -133,8 +121,7 @@ public class ConsoleInputReaderTest {
 
     @Test
     void readPosition_ifInputEnds_throws() {
-        Scanner in = new Scanner(new ByteArrayInputStream("".getBytes(StandardCharsets.UTF_8)));
-        PrintStream out = new PrintStream(new ByteArrayOutputStream());
+        Scanner in = createScanner(""); // Empty input
         ConsoleInputReader reader = new ConsoleInputReader(in, out);
 
         assertThrows(InputTerminatedException.class, () -> reader.readPosition(""));
