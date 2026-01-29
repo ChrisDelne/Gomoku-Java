@@ -10,7 +10,13 @@ public class ConsoleRenderer {
 
     private final PrintStream out;
 
-    private int rows, cols, rowDigits, colDigits, cellWidth, leftPad, rightPad, innerWidth;
+    private int rows;
+    private int cols;
+    private int rowDigits;
+    private int cellWidth;
+    private int leftPad;
+    private int rightPad;
+    private int innerWidth;
     private String headerIndent;
 
     private void setupGridParams(GridView grid){
@@ -18,7 +24,7 @@ public class ConsoleRenderer {
         cols = grid.getColumns();
 
         rowDigits = digits(rows - 1);
-        colDigits = digits(cols - 1);
+        final int colDigits = digits(cols - 1);
 
         // Ogni colonna “prenota”: (max cifre) + 1 spazio di separazione
         cellWidth = colDigits + 1;
@@ -43,10 +49,10 @@ public class ConsoleRenderer {
         this.out = out;
     }
 
-    public void render(GridView g, Set<Position> winningPositions) {
+    public void render(GridView g, Set<Position> positionsToHighlight) {
         clearScreenAndCursorToHome();
         printGameHeadlines();
-        printGrid(g, winningPositions);
+        printGrid(g, positionsToHighlight);
     }
 
     private void clearScreenAndCursorToHome() {
@@ -116,7 +122,7 @@ public class ConsoleRenderer {
         out.println();
     }
 
-    private void printGridRows(GridView g, Set<Position> winningPositions) {
+    private void printGridRows(GridView g, Set<Position> positionsToHighlight) {
         for (int r = 0; r < rows; r++) {
             out.printf("%" + rowDigits + "d ", r+1); // Indici 0-based -> numerazione righe
 
@@ -125,7 +131,7 @@ public class ConsoleRenderer {
             out.print(repeat(' ', leftPad));
 
             for (int c = 0; c < cols; c++) {
-                out.print(symbol(new Position(r, c), g.getStateAt(r, c), winningPositions));
+                out.print(symbol(new Position(r, c), g.getStateAt(r, c), positionsToHighlight));
 
                 // Spazi SOLO tra colonne (non dopo l’ultima)
                 if (c < cols - 1)
